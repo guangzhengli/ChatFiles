@@ -47,6 +47,10 @@ export interface ChatBody {
   prompt: string;
 }
 
+export interface ChatFileBody {
+  file: File;
+}
+
 export interface KeyValuePair {
   key: string;
   value: any;

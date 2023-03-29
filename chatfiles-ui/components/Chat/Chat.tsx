@@ -15,7 +15,7 @@ import { ChatMessage } from './ChatMessage';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
-import ChatFilesImport from "@/components/Chat/ChatFilesImport";
+import Upload from "@/components/Chat/Upload";
 
 interface Props {
   conversation: Conversation;
@@ -168,7 +168,7 @@ export const Chat: FC<Props> = memo(
                             })
                           }
                         />
-                        <ChatFilesImport/>
+                        <Upload/>
                       </div>
                     )}
                   </div>
