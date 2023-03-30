@@ -1,8 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type {NextApiRequest, NextApiResponse} from 'next'
 import fs from "fs";
 import fetch from "node-fetch";
 import FormData from 'form-data';
-import formidable, { File } from 'formidable';
+import {IncomingForm} from 'formidable';
 
 export const config = {
     api: {
@@ -10,41 +10,33 @@ export const config = {
     }
 };
 
-type ProcessedFiles = Array<[string, File]>;
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+    console.log("beginning handler");
 
-    let status = 200,
-        resultBody = { status: 'ok', message: 'Files were uploaded successfully' };
-
-    /* Get files using formidable */
-    const files = await new Promise<ProcessedFiles | undefined>((resolve, reject) => {
-        const form = new formidable.IncomingForm();
-        const files: ProcessedFiles = [];
-        form.on('file', (field: any, file: any) => {
-            files.push([field, file]);
-        });
-    }).catch(e => {
-        console.log(e);
-        status = 500;
-        resultBody = {
-            status: 'fail', message: 'Upload error'
-        }
+    const fData = await new Promise<{ fields: any, files: any }>((resolve, reject) => {
+        const form = new IncomingForm({
+            multiples: false
+        })
+        form.parse(req, (err, fields, files) => {
+            if (err) return reject(err)
+            resolve({ fields, files })
+        })
     });
 
-    if (files?.length) {
+    if (fData?.files.file) {
+        const uploadFile = fData.files.file;
         const formData = new FormData();
-        for (const file of files) {
-            formData.append(file[0], fs.createReadStream(file[1].filepath));
-        }
 
-        const response = await fetch('http://localhost:5000/upload', {
-            headers: formData.getHeaders(),
+        formData.append('file', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename)
+
+        const response = await fetch('http://127.0.1:5001/upload', {
             method: 'POST',
             body: formData
         });
 
-        res.status(200).json(await response.json());
+        const result = await response.text();
+
+        res.status(200).json(result);
     }
 }
 

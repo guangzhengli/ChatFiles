@@ -1,7 +1,7 @@
 import {
   Conversation,
   ErrorMessage,
-  KeyValuePair,
+  KeyValuePair, LlamaIndex,
   Message,
   OpenAIModel,
 } from '@/types';
@@ -15,7 +15,7 @@ import { ChatMessage } from './ChatMessage';
 import { ErrorMessageDiv } from './ErrorMessageDiv';
 import { ModelSelect } from './ModelSelect';
 import { SystemPrompt } from './SystemPrompt';
-import Upload from "@/components/Chat/Upload";
+import {Upload} from "@/components/Chat/Upload";
 
 interface Props {
   conversation: Conversation;
@@ -54,6 +54,7 @@ export const Chat: FC<Props> = memo(
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
     const [showSettings, setShowSettings] = useState<boolean>(false);
+    const [indexName, setIndexName] = useState<string>();
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -62,6 +63,10 @@ export const Chat: FC<Props> = memo(
     const handleSettings = () => {
       setShowSettings(!showSettings);
     };
+
+    const handleIndexName = (indexName: string) => {
+        setIndexName(indexName);
+    }
 
     const onClearAll = () => {
       if (confirm(t<string>('Are you sure you want to clear all messages?'))) {
@@ -142,35 +147,9 @@ export const Chat: FC<Props> = memo(
               {conversation.messages.length === 0 ? (
                 <>
                   <div className="mx-auto flex w-[350px] flex-col space-y-10 pt-12 sm:w-[600px]">
-                    <div className="text-center text-3xl font-semibold text-gray-800 dark:text-gray-100">
-                      {models.length === 0 ? t('Loading...') : 'ChatFiles'}
+                    <div className="flex h-full flex-col space-y-4 rounded border border-neutral-200 p-4 dark:border-neutral-600">
+                      <Upload onImportedFile={handleIndexName}/>
                     </div>
-
-                    {models.length > 0 && (
-                      <div className="flex h-full flex-col space-y-4 rounded border border-neutral-200 p-4 dark:border-neutral-600">
-                        <ModelSelect
-                          model={conversation.model}
-                          models={models}
-                          onModelChange={(model) =>
-                            onUpdateConversation(conversation, {
-                              key: 'model',
-                              value: model,
-                            })
-                          }
-                        />
-
-                        <SystemPrompt
-                          conversation={conversation}
-                          onChangePrompt={(prompt) =>
-                            onUpdateConversation(conversation, {
-                              key: 'prompt',
-                              value: prompt,
-                            })
-                          }
-                        />
-                        <Upload/>
-                      </div>
-                    )}
                   </div>
                 </>
               ) : (

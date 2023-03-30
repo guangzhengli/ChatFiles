@@ -47,27 +47,17 @@ export interface ChatBody {
   prompt: string;
 }
 
-export interface ChatFileBody {
-  file: File;
-}
-
 export interface KeyValuePair {
   key: string;
   value: any;
-}
-
-// keep track of local storage schema
-export interface LocalStorage {
-  apiKey: string;
-  conversationHistory: Conversation[];
-  selectedConversation: Conversation;
-  theme: 'light' | 'dark';
-  // added folders (3/23/23)
-  folders: ChatFolder[];
 }
 
 export interface ErrorMessage {
   code: String | null;
   title: String;
   messageLines: String[];
+}
+
+export interface LlamaIndex {
+  name: string;
 }
