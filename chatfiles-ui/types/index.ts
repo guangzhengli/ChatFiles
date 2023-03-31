@@ -38,6 +38,7 @@ export interface Conversation {
   model: OpenAIModel;
   prompt: string;
   folderId: number;
+  index: LlamaIndex;
 }
 
 export interface ChatBody {
@@ -59,5 +60,5 @@ export interface ErrorMessage {
 }
 
 export interface LlamaIndex {
-  name: string;
+  indexName: string;
 }

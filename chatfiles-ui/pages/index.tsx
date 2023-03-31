@@ -339,6 +339,9 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: 0,
+      index: {
+        indexName: '',
+      },
     };
 
     const updatedConversations = [...conversations, newConversation];
@@ -372,6 +375,9 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: 0,
+        index: {
+          indexName: '',
+        },
       });
       localStorage.removeItem('selectedConversation');
     }
@@ -406,6 +412,9 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: 0,
+      index: {
+        indexName: '',
+      },
     });
     localStorage.removeItem('selectedConversation');
 
@@ -508,6 +517,9 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: 0,
+        index: {
+          indexName: '',
+        },
       });
     }
   }, [serverSideApiKeyIsSet]);

@@ -54,7 +54,6 @@ export const Chat: FC<Props> = memo(
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
     const [showSettings, setShowSettings] = useState<boolean>(false);
-    const [indexName, setIndexName] = useState<string>();
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -63,10 +62,6 @@ export const Chat: FC<Props> = memo(
     const handleSettings = () => {
       setShowSettings(!showSettings);
     };
-
-    const handleIndexName = (indexName: string) => {
-        setIndexName(indexName);
-    }
 
     const onClearAll = () => {
       if (confirm(t<string>('Are you sure you want to clear all messages?'))) {
@@ -144,11 +139,16 @@ export const Chat: FC<Props> = memo(
               className="max-h-full overflow-x-hidden"
               ref={chatContainerRef}
             >
-              {conversation.messages.length === 0 ? (
+              {conversation.index?.indexName.length === 0 ? (
                 <>
                   <div className="mx-auto flex w-[350px] flex-col space-y-10 pt-12 sm:w-[600px]">
                     <div className="flex h-full flex-col space-y-4 rounded border border-neutral-200 p-4 dark:border-neutral-600">
-                      <Upload onImportedFile={handleIndexName}/>
+                      <Upload onIndexChange={(index) =>
+                          onUpdateConversation(conversation, {
+                            key: 'index',
+                            value: index,
+                          })
+                      }/>
                     </div>
                   </div>
                 </>

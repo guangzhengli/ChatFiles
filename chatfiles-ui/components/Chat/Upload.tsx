@@ -1,26 +1,24 @@
-import {useRef, useState} from 'react';
+import {LlamaIndex} from "@/types";
 
 interface Props {
-    onImportedFile: (indexName: string) => void;
+    onIndexChange: (index: LlamaIndex) => void;
 }
-export const Upload = ({onImportedFile}: Props) => {
+export const Upload = ({onIndexChange}: Props) => {
 
     const handleFile = async (file: File) => {
 
-        /* Add files to FormData */
         const formData = new FormData();
         formData.append("file", file);
 
-        /* Send request to our api route */
         const response = await fetch('/api/upload', {
             method: 'POST',
             body: formData
         });
 
-        const body = await response.json() as { text: string };
+        const indexName = await response.json() as string;
 
-        console.log(body.text)
-        onImportedFile(body.text);
+        console.log("import file index json name:", indexName)
+        onIndexChange({ indexName: indexName });
     };
 
 
