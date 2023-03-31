@@ -17,6 +17,8 @@ llm_predictor = LLMPredictor(llm=ChatOpenAI(
 
 def create_llama_index(filepath):
     index_name = get_index_name_from_file(filepath)
+    if get_index_from_file_cache(index_name) is not None:
+        return index_name
     documents = SimpleDirectoryReader(input_files=[filepath]).load_data()
     index = GPTSimpleVectorIndex(documents)
     index.save_to_disk(index_cache_file_dir / index_name)

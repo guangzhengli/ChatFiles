@@ -40,7 +40,7 @@ def query_from_llama_index():
                      "doc_id": str(x.doc_id),
                      "start": x.node_info['start'],
                      "end": x.node_info['end']
-                    } for x in answer.source_nodes]
+                     } for x in answer.source_nodes]
     }
     return make_response(jsonify(response_json)), 200
 
