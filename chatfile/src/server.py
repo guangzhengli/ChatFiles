@@ -30,19 +30,19 @@ def upload_file():
 
 @app.route('/query', methods=['GET'])
 def query_from_llama_index():
-    text = request.args.get('text')
-    index_name = request.args.get('index_name')
-    answer = get_answer_from_llama_index(text, index_name)
-    response_json = {
-        "text": str(answer),
-        "sources": [{"text": str(x.source_text),
-                     "similarity": round(x.similarity, 2),
-                     "doc_id": str(x.doc_id),
-                     "start": x.node_info['start'],
-                     "end": x.node_info['end']
-                     } for x in answer.source_nodes]
-    }
-    return make_response(jsonify(response_json)), 200
+    message = request.args.get('message')
+    index_name = request.args.get('indexName')
+    answer = get_answer_from_llama_index(message, index_name)
+    # response_json = {
+    #     "text": str(answer),
+    #     "sources": [{"text": str(x.source_text),
+    #                  "similarity": round(x.similarity, 2),
+    #                  "doc_id": str(x.doc_id),
+    #                  "start": x.node_info['start'],
+    #                  "end": x.node_info['end']
+    #                  } for x in answer.source_nodes]
+    # }
+    return make_response(jsonify(answer)), 200
 
 
 if __name__ == '__main__':
