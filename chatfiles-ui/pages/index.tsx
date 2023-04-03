@@ -79,106 +79,13 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       setMessageIsStreaming(true);
       setMessageError(false);
 
-      const chatBody: ChatBody = {
-        model: updatedConversation.model,
-        messages: updatedConversation.messages,
-        key: apiKey,
-        prompt: updatedConversation.prompt,
-      };
 
-      const controller = new AbortController();
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        signal: controller.signal,
-        body: JSON.stringify(chatBody),
-      });
-
-      if (!response.ok) {
-        setLoading(false);
-        setMessageIsStreaming(false);
-        setMessageError(true);
-        return;
+      if (updatedConversation.index.indexName.length === 0) {
+        await handleChatSend(updatedConversation, message);
+      } else {
+        await handleChatFileSend(updatedConversation, message);
       }
 
-      const data = response.body;
-
-      if (!data) {
-        setLoading(false);
-        setMessageIsStreaming(false);
-        setMessageError(true);
-
-        return;
-      }
-
-      if (updatedConversation.messages.length === 1) {
-        const { content } = message;
-        const customName =
-          content.length > 30 ? content.substring(0, 30) + '...' : content;
-
-        updatedConversation = {
-          ...updatedConversation,
-          name: customName,
-        };
-      }
-
-      setLoading(false);
-
-      const reader = data.getReader();
-      const decoder = new TextDecoder();
-      let done = false;
-      let isFirst = true;
-      let text = '';
-
-      while (!done) {
-        if (stopConversationRef.current === true) {
-          controller.abort();
-          done = true;
-          break;
-        }
-        const { value, done: doneReading } = await reader.read();
-        done = doneReading;
-        const chunkValue = decoder.decode(value);
-
-        text += chunkValue;
-
-        if (isFirst) {
-          isFirst = false;
-          const updatedMessages: Message[] = [
-            ...updatedConversation.messages,
-            { role: 'assistant', content: chunkValue },
-          ];
-
-          updatedConversation = {
-            ...updatedConversation,
-            messages: updatedMessages,
-          };
-
-          setSelectedConversation(updatedConversation);
-        } else {
-          const updatedMessages: Message[] = updatedConversation.messages.map(
-            (message, index) => {
-              if (index === updatedConversation.messages.length - 1) {
-                return {
-                  ...message,
-                  content: text,
-                };
-              }
-
-              return message;
-            },
-          );
-
-          updatedConversation = {
-            ...updatedConversation,
-            messages: updatedMessages,
-          };
-
-          setSelectedConversation(updatedConversation);
-        }
-      }
 
       saveConversation(updatedConversation);
 
@@ -203,6 +110,129 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       setMessageIsStreaming(false);
     }
   };
+
+  const handleChatFileSend = async (updatedConversation: Conversation, message: Message) => {
+    const response = await fetch(`/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}`, {
+      method: 'GET'
+    });
+
+    const answer = await response.json() as string;
+
+    const updatedMessages: Message[] = [
+      ...updatedConversation.messages,
+      { role: 'assistant', content: answer },
+    ];
+
+    updatedConversation = {
+      ...updatedConversation,
+      messages: updatedMessages,
+    };
+
+    setSelectedConversation(updatedConversation);
+  }
+
+  const handleChatSend = async (updatedConversation: Conversation, message: Message) => {
+    const chatBody: ChatBody = {
+      model: updatedConversation.model,
+      messages: updatedConversation.messages,
+      key: apiKey,
+      prompt: updatedConversation.prompt,
+    };
+
+    const controller = new AbortController();
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+      body: JSON.stringify(chatBody),
+    });
+
+    if (!response.ok) {
+      setLoading(false);
+      setMessageIsStreaming(false);
+      setMessageError(true);
+      return;
+    }
+
+    const data = response.body;
+
+    if (!data) {
+      setLoading(false);
+      setMessageIsStreaming(false);
+      setMessageError(true);
+
+      return;
+    }
+
+    if (updatedConversation.messages.length === 1) {
+      const { content } = message;
+      const customName =
+          content.length > 30 ? content.substring(0, 30) + '...' : content;
+
+      updatedConversation = {
+        ...updatedConversation,
+        name: customName,
+      };
+    }
+
+    setLoading(false);
+
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let isFirst = true;
+    let text = '';
+
+    while (!done) {
+      if (stopConversationRef.current === true) {
+        controller.abort();
+        done = true;
+        break;
+      }
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+
+      text += chunkValue;
+
+      if (isFirst) {
+        isFirst = false;
+        const updatedMessages: Message[] = [
+          ...updatedConversation.messages,
+          { role: 'assistant', content: chunkValue },
+        ];
+
+        updatedConversation = {
+          ...updatedConversation,
+          messages: updatedMessages,
+        };
+
+        setSelectedConversation(updatedConversation);
+      } else {
+        const updatedMessages: Message[] = updatedConversation.messages.map(
+            (message, index) => {
+              if (index === updatedConversation.messages.length - 1) {
+                return {
+                  ...message,
+                  content: text,
+                };
+              }
+
+              return message;
+            },
+        );
+
+        updatedConversation = {
+          ...updatedConversation,
+          messages: updatedMessages,
+        };
+
+        setSelectedConversation(updatedConversation);
+      }
+    }
+  }
 
   const fetchModels = async (key: string) => {
     const error = {
