@@ -1,20 +1,13 @@
-import {
-  Conversation,
-  ErrorMessage,
-  KeyValuePair, LlamaIndex,
-  Message,
-  OpenAIModel,
-} from '@/types';
-import { throttle } from '@/utils';
-import { IconClearAll, IconSettings } from '@tabler/icons-react';
-import { useTranslation } from 'next-i18next';
-import { FC, memo, MutableRefObject, useEffect, useRef, useState } from 'react';
-import { ChatInput } from './ChatInput';
-import { ChatLoader } from './ChatLoader';
-import { ChatMessage } from './ChatMessage';
-import { ErrorMessageDiv } from './ErrorMessageDiv';
-import { ModelSelect } from './ModelSelect';
-import { SystemPrompt } from './SystemPrompt';
+import {Conversation, ErrorMessage, KeyValuePair, Message, OpenAIModel,} from '@/types';
+import {throttle} from '@/utils';
+import {IconClearAll, IconSettings} from '@tabler/icons-react';
+import {useTranslation} from 'next-i18next';
+import {FC, memo, MutableRefObject, useEffect, useRef, useState} from 'react';
+import {ChatInput} from './ChatInput';
+import {ChatLoader} from './ChatLoader';
+import {ChatMessage} from './ChatMessage';
+import {ErrorMessageDiv} from './ErrorMessageDiv';
+import {ModelSelect} from './ModelSelect';
 import {Upload} from "@/components/Chat/Upload";
 
 interface Props {
@@ -43,7 +36,6 @@ export const Chat: FC<Props> = memo(
     serverSideApiKeyIsSet,
     messageIsStreaming,
     modelError,
-    messageError,
     loading,
     onSend,
     onUpdateConversation,
@@ -139,7 +131,7 @@ export const Chat: FC<Props> = memo(
               className="max-h-full overflow-x-hidden"
               ref={chatContainerRef}
             >
-              {conversation.index?.indexName.length === 0 ? (
+              {(conversation.index?.indexName.length === 0) && (conversation.messages.length === 0) ? (
                 <>
                   <div className="mx-auto flex w-[350px] flex-col space-y-10 pt-12 sm:w-[600px]">
                     <div className="flex h-full flex-col space-y-4 rounded border border-neutral-200 p-4 dark:border-neutral-600">
