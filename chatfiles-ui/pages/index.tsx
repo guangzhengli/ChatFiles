@@ -199,6 +199,8 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
           messages: updatedMessages,
         };
 
+        setLoading(false)
+
         setSelectedConversation(updatedConversation);
       }
 
