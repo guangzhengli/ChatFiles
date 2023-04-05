@@ -147,12 +147,7 @@ export const Chat: FC<Props> = memo(
               ) : (
                 <>
                   <div className="flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                    {t('Model')}: {conversation.model.name}
-                    <IconSettings
-                      className="ml-2 cursor-pointer hover:opacity-50"
-                      onClick={handleSettings}
-                      size={18}
-                    />
+                    {t('File')}: {conversation.index.indexName}
                     <IconClearAll
                       className="ml-2 cursor-pointer hover:opacity-50"
                       onClick={onClearAll}
