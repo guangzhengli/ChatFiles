@@ -1,9 +1,9 @@
 from llama_index import GPTSimpleVectorIndex, SimpleDirectoryReader
 
-from src.file import get_index_filepath, get_index_name_from_file_name, check_index_file_exists, \
+from file import get_index_filepath, get_index_name_from_file_name, check_index_file_exists, \
     get_index_name_without_json_extension
-from src.llm import get_llm_predictor, get_index_by_index_name
-from src.prompt import get_prompt
+from llm import get_llm_predictor, get_index_by_index_name
+from prompt import get_prompt
 
 
 def check_llama_index_exists(file_name):

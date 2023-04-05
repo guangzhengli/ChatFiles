@@ -1,10 +1,9 @@
 import os
 
 from flask import Flask, request, make_response
-from werkzeug.utils import secure_filename
 
 from chat import create_llama_index, get_answer_from_llama_index, check_llama_index_exists
-from src.file import get_index_path, get_index_name_from_file_name, check_index_file_exists, \
+from file import get_index_path, get_index_name_from_file_name, check_index_file_exists, \
     get_index_name_with_json_extension
 
 app = Flask(__name__)
@@ -55,4 +54,4 @@ def query_from_llama_index():
 if __name__ == '__main__':
     if not os.path.exists('./documents'):
         os.makedirs('./documents')
-    app.run(port=5001, debug=True)
+    app.run(port=5000, debug=True, host='0.0.0.0')

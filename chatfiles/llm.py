@@ -3,7 +3,10 @@ import openai
 from langchain.chat_models import ChatOpenAI
 from llama_index import LLMPredictor, GPTSimpleVectorIndex
 
-from src.file import check_index_file_exists, get_index_filepath
+from file import check_index_file_exists, get_index_filepath
+from dotenv import load_dotenv
+
+load_dotenv()
 
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 openai.api_key = OPENAI_API_KEY
