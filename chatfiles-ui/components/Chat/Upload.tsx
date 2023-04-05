@@ -2,10 +2,12 @@ import {LlamaIndex} from "@/types";
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
+    handleIsUploading: (isUploading: boolean) => void;
 }
-export const Upload = ({onIndexChange}: Props) => {
+export const Upload = ({onIndexChange, handleIsUploading}: Props) => {
 
     const handleFile = async (file: File) => {
+        handleIsUploading(true);
 
         const formData = new FormData();
         formData.append("file", file);
@@ -19,6 +21,7 @@ export const Upload = ({onIndexChange}: Props) => {
 
         console.log("import file index json name:", indexName)
         onIndexChange({ indexName: indexName });
+        handleIsUploading(false);
     };
 
 
