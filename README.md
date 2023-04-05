@@ -12,7 +12,13 @@
 1. clone this repository.
 2. create a .env file on root path.
 3. put your OpenAI Key to .env file with OPENAI_API_KEY='your token'
-4. docker compose up
+
+run this project with docker compose.
+```shell
+docker compose up
+```
+
+open browser with http://localhost:3000
 
 ### chat with file
 1. upload a file.
@@ -49,10 +55,16 @@ python3 server.py
 **上传文件然后与之对话.**
 
 ## 如何使用
-克隆此存储库。
-在根路径上创建 .env 文件。
-将您的 OpenAI Key 放入 .env 文件中，使用 OPENAI_API_KEY='您的令牌'。
-docker compose up。
+1. 克隆此存储库。
+2. 在根路径上创建 .env 文件。
+3. 将您的 OpenAI Key 放入 .env 文件中，使用 OPENAI_API_KEY='您的令牌'。
+
+使用 docker compose 启动项目
+```shell
+docker compose up
+```
+
+打开浏览器输入： http://localhost:3000
 
 ### 与文件对话
 上传文件。
