@@ -6,6 +6,8 @@ from langchain.chat_models import ChatOpenAI
 
 from llama_index import GPTSimpleVectorIndex, LLMPredictor, SimpleDirectoryReader
 
+from src.prompt import get_prompt
+
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 openai.api_key = OPENAI_API_KEY
 
@@ -27,7 +29,7 @@ def create_llama_index(filepath):
 
 def get_answer_from_llama_index(text, index_name):
     index = get_index_from_file_cache(index_name)
-    return index.query("\n".join(text), llm_predictor=llm_predictor)
+    return index.query(text, llm_predictor=llm_predictor, text_qa_template=get_prompt())
 
 
 def get_index_name_from_file(filepath):

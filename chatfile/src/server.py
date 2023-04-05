@@ -33,7 +33,7 @@ def query_from_llama_index():
     message = request.args.get('message')
     index_name = request.args.get('indexName')
     answer = get_answer_from_llama_index(message, index_name)
-    return make_response(jsonify(str(answer.response))), 200
+    return make_response(str(answer.response)), 200
 
 
 if __name__ == '__main__':
