@@ -9,19 +9,24 @@ export const Upload = ({onIndexChange, handleIsUploading}: Props) => {
     const handleFile = async (file: File) => {
         handleIsUploading(true);
 
-        const formData = new FormData();
-        formData.append("file", file);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
 
-        const response = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        });
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
 
-        const indexName = await response.json() as string;
+            const indexName = await response.json() as string;
 
-        console.log("import file index json name:", indexName)
-        onIndexChange({ indexName: indexName });
-        handleIsUploading(false);
+            console.log("import file index json name:", indexName)
+            onIndexChange({ indexName: indexName });
+            handleIsUploading(false);
+        } catch (e) {
+            console.error(e);
+            handleIsUploading(false);
+        }
     };
 
 
@@ -38,7 +43,7 @@ export const Upload = ({onIndexChange, handleIsUploading}: Props) => {
                     </svg>
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
                         drag and drop</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">TXT, PDF</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">TXT, PDF, EPUB...</p>
                 </div>
                 <input id="dropzone-file" type="file" className="hidden" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {

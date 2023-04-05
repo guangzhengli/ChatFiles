@@ -3,6 +3,7 @@ import fs from "fs";
 import fetch from "node-fetch";
 import FormData from 'form-data';
 import {IncomingForm} from 'formidable';
+import {CHAT_FILES_SERVER_HOST} from "@/utils/app/const";
 
 export const config = {
     api: {
@@ -29,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         formData.append('file', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename)
 
-        const response = await fetch('http://127.0.1:5001/upload', {
+        const response = await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
             method: 'POST',
             body: formData
         });
