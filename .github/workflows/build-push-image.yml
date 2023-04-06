@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push chatfiles image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./chatfiles/
+          push: true
+          tags: guangzhengli/chatfiles:latest
+          dockerfile: ./<path-to-dockerfile>/Dockerfile
+      -
+        name: Build and push chatfiles-ui image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./chatfiles-ui/
+          push: true
+          tags: guangzhengli/chatfiles-ui:latest
+          dockerfile: ./<path-to-dockerfile>/Dockerfile
