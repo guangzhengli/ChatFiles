@@ -28,7 +28,7 @@ jobs:
         name: Build and push chatfiles image
         uses: docker/build-push-action@v4
         with:
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64,linux/arm64
           context: ./chatfiles/
           push: true
           tags: guangzhengli/chatfiles:latest
@@ -37,7 +37,7 @@ jobs:
         name: Build and push chatfiles-ui image
         uses: docker/build-push-action@v4
         with:
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64,linux/arm64
           context: ./chatfiles-ui/
           push: true
           tags: guangzhengli/chatfiles-ui:latest
