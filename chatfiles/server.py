@@ -54,4 +54,4 @@ def query_from_llama_index():
 if __name__ == '__main__':
     if not os.path.exists('./documents'):
         os.makedirs('./documents')
-    app.run(port=5000, debug=True, host='0.0.0.0')
+    app.run(port=5000, host='0.0.0.0')
