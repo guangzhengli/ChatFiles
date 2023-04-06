@@ -25,7 +25,7 @@ jobs:
         name: Build and push chatfiles image
         uses: docker/build-push-action@v4
         with:
-          context: ../../chatfiles
+          context: ../../chatfiles/
           push: true
           tags: guangzhengli/chatfiles:latest
           dockerfile: ./<path-to-dockerfile>/Dockerfile
