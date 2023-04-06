@@ -48,3 +48,10 @@ create a file named .env with value(OPENAI_API_KEY=your token)
 ```shell
 python3 server.py
 ```
+
+
+## Feature
+
+- [x] Chat with GPT-3.5
+- [x] Chat with file by llama_index
+- [ ] Upload multiple files to one index, chat with multiple files.

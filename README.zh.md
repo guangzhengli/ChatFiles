@@ -41,3 +41,9 @@ cd chatfiles
 ```shell
 python3 server.py
 ```
+
+## 功能
+
+- [x] 与 GPT-3.5 对话。
+- [x] 与你上传的文件对话。
+- [ ] 上传多个文件，构建同一个 Index，然后与之对话。
