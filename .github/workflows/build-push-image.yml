@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       -
@@ -25,15 +28,17 @@ jobs:
         name: Build and push chatfiles image
         uses: docker/build-push-action@v4
         with:
-          context: ../../chatfiles/
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          context: ./chatfiles-ui/
           push: true
           tags: guangzhengli/chatfiles:latest
-          dockerfile: ./<path-to-dockerfile>/Dockerfile
+          file: ./<path-to-dockerfile>/Dockerfile
       -
         name: Build and push chatfiles-ui image
         uses: docker/build-push-action@v4
         with:
-          context: ../../chatfiles-ui/
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          context: ./chatfiles-ui/
           push: true
           tags: guangzhengli/chatfiles-ui:latest
-          dockerfile: ./<path-to-dockerfile>/Dockerfile
+          file: ./<path-to-dockerfile>/Dockerfile
