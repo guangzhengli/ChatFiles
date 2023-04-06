@@ -3,3 +3,6 @@ langchain==0.0.123
 llama-index==0.4.39
 openai==0.27.1
 python-dotenv==0.19.2
+PyPDF2==3.0.1
+EbookLib==0.18
+docx2txt==0.8
