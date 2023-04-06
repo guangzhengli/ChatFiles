@@ -29,10 +29,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
-          context: ./chatfiles-ui/
+          context: ./chatfiles/
           push: true
           tags: guangzhengli/chatfiles:latest
-          file: ./<path-to-dockerfile>/Dockerfile
+          file: ./chatfiles/Dockerfile
       -
         name: Build and push chatfiles-ui image
         uses: docker/build-push-action@v4
@@ -41,4 +41,4 @@ jobs:
           context: ./chatfiles-ui/
           push: true
           tags: guangzhengli/chatfiles-ui:latest
-          file: ./<path-to-dockerfile>/Dockerfile
+          file: ./chatfiles-ui/Dockerfile
