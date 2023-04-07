@@ -6,3 +6,4 @@ python-dotenv==0.19.2
 PyPDF2==3.0.1
 EbookLib==0.18
 docx2txt==0.8
+html2text==2020.1.16
