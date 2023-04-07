@@ -2,7 +2,7 @@ from llama_index import GPTSimpleVectorIndex, SimpleDirectoryReader
 
 from file import get_index_filepath, get_index_name_from_file_name, check_index_file_exists, \
     get_index_name_without_json_extension
-from llm import get_llm_predictor, get_index_by_index_name
+from llm import get_index_by_index_name
 from prompt import get_prompt
 
 
@@ -21,4 +21,4 @@ def create_llama_index(filepath):
 
 def get_answer_from_llama_index(text, index_name):
     index = get_index_by_index_name(index_name)
-    return index.query(text, llm_predictor=get_llm_predictor(), text_qa_template=get_prompt())
+    return index.query(text, text_qa_template=get_prompt())
