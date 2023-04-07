@@ -14,7 +14,7 @@ def check_llama_index_exists(file_name):
 def create_llama_index(filepath):
     index_name = get_index_name_from_file_name(filepath)
     documents = SimpleDirectoryReader(input_files=[filepath]).load_data()
-    index = GPTSimpleVectorIndex(documents)
+    index = GPTSimpleVectorIndex.from_documents(documents)
     index.save_to_disk(get_index_filepath(index_name))
     return get_index_name_without_json_extension(index_name)
 
