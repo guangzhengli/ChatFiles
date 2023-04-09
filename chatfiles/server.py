@@ -3,6 +3,7 @@ import os
 from flask import Flask, request, make_response
 
 from chat import create_llama_index, get_answer_from_llama_index, check_llama_index_exists
+from file import get_index_name_without_json_extension
 from file import get_index_path, get_index_name_from_file_name, check_index_file_exists, \
     get_index_name_with_json_extension
 
@@ -20,7 +21,7 @@ def upload_file():
         filepath = os.path.join(get_index_path(), os.path.basename(filename))
 
         if check_llama_index_exists(filepath) is True:
-            return get_index_name_from_file_name(filepath)
+            return get_index_name_without_json_extension(get_index_name_from_file_name(filepath))
 
         uploaded_file.save(filepath)
 
@@ -30,7 +31,7 @@ def upload_file():
         if filepath is not None and os.path.exists(filepath):
             os.remove(filepath)
 
-        return index_name
+        return get_index_name_without_json_extension(index_name)
     except Exception as e:
         # cleanup temp file
         if filepath is not None and os.path.exists(filepath):

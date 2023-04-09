@@ -1,0 +1,26 @@
+# fly.toml file generated for chatfiles-ui on 2023-04-09T21:13:37+08:00
+
+app = "chatfiles-ui"
+kill_signal = "SIGINT"
+kill_timeout = 5
+mounts = []
+primary_region = "lax"
+processes = []
+
+[[services]]
+  internal_port = 3000
+  processes = ["app"]
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443

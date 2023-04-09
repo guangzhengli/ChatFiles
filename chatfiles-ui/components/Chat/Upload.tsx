@@ -1,12 +1,20 @@
 import {LlamaIndex} from "@/types";
+import { CHAT_FILES_MAX_SIZE } from "@/utils/app/const";
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
     handleIsUploading: (isUploading: boolean) => void;
+    handleIsUploadSuccess: (isUploading: boolean) => void;
+    handleUploadError: (error: string) => void;
 }
-export const Upload = ({onIndexChange, handleIsUploading}: Props) => {
+export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess, handleUploadError}: Props) => {
 
     const handleFile = async (file: File) => {
+        if (!validateFile(file)) {
+            handleIsUploadSuccess(false);
+            return;
+        }
+
         handleIsUploading(true);
 
         try {
@@ -23,13 +31,34 @@ export const Upload = ({onIndexChange, handleIsUploading}: Props) => {
             console.log("import file index json name:", indexName)
             onIndexChange({ indexName: indexName });
             handleIsUploading(false);
+            handleIsUploadSuccess(true)
         } catch (e) {
             console.error(e);
+            handleUploadError((e as Error).message);
             handleIsUploading(false);
+            handleIsUploadSuccess(false)
         }
     };
 
-
+    const validateFile = (file: File) => {
+        console.log(`select a file size: ${humanFileSize(file.size)}`);
+        console.log(`file max size: ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
+        if (CHAT_FILES_MAX_SIZE != 0 && file.size > CHAT_FILES_MAX_SIZE) {
+          handleUploadError(`Please select a file smaller than ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
+          return false;
+        }
+        return true;
+      };
+  
+      function humanFileSize(size: number): string {
+        const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+        let i = 0;
+        while (size >= 1024 && i < units.length - 1) {
+          size /= 1024;
+          i++;
+        }
+        return `${size.toFixed(2)} ${units[i]}`;
+      }
 
     return (
         <div className="flex items-center justify-center w-full">
