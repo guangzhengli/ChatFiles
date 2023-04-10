@@ -17,6 +17,7 @@ def upload_file():
     filepath = None
     try:
         uploaded_file = request.files["file"]
+
         filename = uploaded_file.filename
         filepath = os.path.join(get_index_path(), os.path.basename(filename))
 
@@ -55,4 +56,6 @@ def query_from_llama_index():
 if __name__ == '__main__':
     if not os.path.exists('./documents'):
         os.makedirs('./documents')
+    if (os.environ.get('CHAT_FILES_MAX_SIZE') is not None):
+        app.config['MAX_CONTENT_LENGTH'] = int(os.environ.get('CHAT_FILES_MAX_SIZE'))
     app.run(port=5000, host='0.0.0.0')
