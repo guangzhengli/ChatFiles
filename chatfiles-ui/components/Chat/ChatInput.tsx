@@ -155,6 +155,20 @@ export const ChatInput: FC<Props> = ({
           </button>
         </div>
       </div>
+      <div className="px-3 pt-2 pb-3 text-center text-[12px] text-black/50 dark:text-white/50 md:px-4 md:pt-3 md:pb-6">
+        <a
+            href="https://github.com/guangzhengli/ChatFiles"
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+        >
+          ChatFiles
+        </a>
+        {' '}
+        {t(
+            "aims to establish embeddings for ChatGPT and facilitate its ability to engage in document-based conversations.",
+        )}
+      </div>
     </div>
   );
 };

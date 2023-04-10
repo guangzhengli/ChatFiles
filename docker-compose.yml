@@ -15,6 +15,6 @@ services:
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - CHAT_FILES_SERVER_HOST=http://chatfiles:5000
-      - CHAT_FILES_MAX_SIZE=0
+      - NEXT_PUBLIC_CHAT_FILES_MAX_SIZE=0
     depends_on:
       - chatfiles

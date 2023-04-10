@@ -1,10 +1,11 @@
 import {LlamaIndex} from "@/types";
 import { CHAT_FILES_MAX_SIZE } from "@/utils/app/const";
+import {humanFileSize} from "@/utils/app/files";
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
     handleIsUploading: (isUploading: boolean) => void;
-    handleIsUploadSuccess: (isUploading: boolean) => void;
+    handleIsUploadSuccess: (isUploadSuccess: boolean) => void;
     handleUploadError: (error: string) => void;
 }
 export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess, handleUploadError}: Props) => {
@@ -49,16 +50,6 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         }
         return true;
       };
-  
-      function humanFileSize(size: number): string {
-        const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-        let i = 0;
-        while (size >= 1024 && i < units.length - 1) {
-          size /= 1024;
-          i++;
-        }
-        return `${size.toFixed(2)} ${units[i]}`;
-      }
 
     return (
         <div className="flex items-center justify-center w-full">
@@ -72,7 +63,7 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
                     </svg>
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
                         drag and drop</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">TXT, PDF, EPUB...</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">File supported types: TXT, PDF, EPUB, Markdown...</p>
                 </div>
                 <input id="dropzone-file" type="file" className="hidden" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
