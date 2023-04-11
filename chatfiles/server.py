@@ -42,15 +42,18 @@ def upload_file():
 
 @app.route('/query', methods=['GET'])
 def query_from_llama_index():
-    message = request.args.get('message')
-    index_name = request.args.get('indexName')
-    index_name = get_index_name_with_json_extension(index_name)
+    try:
+        message = request.args.get('message')
+        index_name = request.args.get('indexName')
+        index_name = get_index_name_with_json_extension(index_name)
 
-    if check_index_file_exists(index_name) is False:
-        return "Index file does not exist", 404
+        if check_index_file_exists(index_name) is False:
+            return "Index file does not exist", 404
 
-    answer = get_answer_from_llama_index(message, index_name)
-    return make_response(str(answer.response)), 200
+        answer = get_answer_from_llama_index(message, index_name)
+        return make_response(str(answer.response)), 200
+    except Exception as e:
+        return "Error: {}".format(str(e)), 500
 
 
 if __name__ == '__main__':
