@@ -8,7 +8,7 @@
 浏览器打开：https://chatfiles-ui.fly.dev。
 上传文件对话，可以看看这些好的例子: [Good Example](./doc/Example.md)
 
-### How to run locally without limited
+### 如何无限制的本地运行
 1. 克隆此存储库。
 2. 在根路径上创建 .env 文件。
 3. 将您的 OpenAI Key 放入 .env 文件中，使用 OPENAI_API_KEY='您的令牌'。
