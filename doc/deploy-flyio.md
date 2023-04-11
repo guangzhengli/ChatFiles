@@ -1,6 +1,6 @@
 # Deploying to Fly.io
 
-## Deployment
+## Deploy chatfiles
 
 To deploy the Docker container from this repository to Fly.io, follow
 these steps:
@@ -68,7 +68,40 @@ To view your app logs:
 flyctl logs
 ```
 
+## Deploy chatfiles-ui
 
+```
+cd path/to/ChatFiles/chatfiles
+```
 
-flyctl secrets set CHAT_FILES_SERVER_HOST=https://chatfiles.fly.dev
+Create and launch your Fly.io app:
 
+```
+flyctl launch
+```
+
+Follow the instructions in your terminal:
+
+- Choose your app name
+- Choose your app region
+- Don't add any databases
+- Don't deploy yet (if you do, the first deploy might fail as the environment variables are not yet set)
+
+Set the required environment variables:
+
+```
+flyctl secrets set OPENAI_API_KEY=your_openai_api_key
+flyctl secrets set CHAT_FILES_SERVER_HOST=https://your-app-name.fly.dev
+```
+
+Deploy your app with:
+
+```
+flyctl deploy
+```
+
+After completing these steps, your Docker container should be deployed to Fly.io and running with the necessary environment variables set. You can view your app by running:
+
+```
+flyctl open
+```
