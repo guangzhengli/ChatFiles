@@ -882,6 +882,11 @@ domexception@^4.0.0:
   dependencies:
     webidl-conversions "^7.0.0"
 
+dotenv@^16.0.3:
+  version "16.0.3"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.0.3.tgz"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
+
 electron-to-chromium@^1.4.284:
   version "1.4.341"
   resolved "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.4.341.tgz"
