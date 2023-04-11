@@ -9,6 +9,8 @@ import {ChatMessage} from './ChatMessage';
 import {ErrorMessageDiv} from './ErrorMessageDiv';
 import {ModelSelect} from './ModelSelect';
 import {Upload} from "@/components/Chat/Upload";
+import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
+import {humanFileSize} from "@/utils/app/files";
 
 interface Props {
   conversation: Conversation;
@@ -47,6 +49,8 @@ export const Chat: FC<Props> = memo(
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
     const [showSettings, setShowSettings] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [errorMsg, setErrorMsg] = useState<string>();
+    const [isUploadSuccess, setIsUploadSuccess] = useState(true);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -60,6 +64,14 @@ export const Chat: FC<Props> = memo(
       setIsUploading(isUploading);
     }
 
+    const handleIsUploadSuccess = (isUploadSuccess: boolean) => {
+      setIsUploadSuccess(isUploadSuccess);
+    }
+
+    const handleUploadError = (errorMsg: string) => {
+      setErrorMsg(errorMsg);
+    }
+    
     const onClearAll = () => {
       if (confirm(t<string>('Are you sure you want to clear all messages?'))) {
         onUpdateConversation(conversation, { key: 'messages', value: [] });
@@ -138,13 +150,43 @@ export const Chat: FC<Props> = memo(
             >
               {(conversation.index?.indexName.length === 0) && (conversation.messages.length === 0) ? (
                 <>
+                  {!isUploadSuccess ? (
+                      <>
+                        <div id="alert-2" className="flex p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                          <svg aria-hidden="true" className="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"></path></svg>
+                          <span className="sr-only">Error</span>
+                          <div className="ml-3 text-sm font-medium">
+                            {errorMsg}.
+                          </div>
+                          <button type="button" onClick={() => handleIsUploadSuccess(true)} className="ml-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-2" aria-label="Close">
+                            <span className="sr-only">Close</span>
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                          </button>
+                        </div>
+                      </>
+                  ): undefined}
+
                   <div className="mx-auto flex w-[350px] flex-col space-y-10 pt-12 sm:w-[600px]">
                     <div className="flex h-full flex-col space-y-4 rounded border border-neutral-200 p-4 dark:border-neutral-600">
                       <Upload onIndexChange={(index) =>
                           onUpdateConversation(conversation, {
                             key: 'index',
                             value: index,})}
-                          handleIsUploading={handleIsUploading}/>
+                          handleIsUploading={handleIsUploading}
+                          handleIsUploadSuccess={handleIsUploadSuccess}
+                          handleUploadError={handleUploadError}
+                          />
+                      {CHAT_FILES_MAX_SIZE != 0 &&
+                          <>
+                            <p className="mt-2 px-8 text-xs text-gray-500 dark:text-gray-400">This environment is only for trial and supports a maximum file size of {humanFileSize(CHAT_FILES_MAX_SIZE)}.</p>
+                            <p className="mt-2 px-8 text-xs text-gray-500 dark:text-gray-400">Here are some good starting questions:
+                              <a className="text-xs text-gray-500 dark:text-gray-400 underline" href="https://github.com/guangzhengli/ChatFiles/blob/dev/doc/Example.md"> Good Examples .</a>
+                            </p>
+                            <p className="mt-2 px-8 text-xs text-gray-500 dark:text-gray-400">If you need to upload larger files, please deploy your own chatfiles by:
+                              <a className="text-xs text-gray-500 dark:text-gray-400 underline" href="https://github.com/guangzhengli/ChatFiles"> Chatfiles .</a>
+                            </p>
+                          </>
+                      }
                     </div>
                   </div>
                   {isUploading ? (

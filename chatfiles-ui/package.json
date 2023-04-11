@@ -12,6 +12,7 @@
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.2",
     "@tabler/icons-react": "^2.9.0",
+    "dotenv": "^16.0.3",
     "eventsource-parser": "^0.1.0",
     "flowbite": "^1.6.4",
     "formidable": "^2.1.1",
