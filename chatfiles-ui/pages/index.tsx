@@ -80,7 +80,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       setMessageError(false);
 
 
-      if (updatedConversation.index.indexName.length === 0) {
+      if (updatedConversation.indexes.length === 0) {
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: updatedConversation.messages,
@@ -118,7 +118,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         if (updatedConversation.messages.length === 1) {
           const { content } = message;
           const customName =
-              content.length > 30 ? content.substring(0, 30) + '...' : content;
+            content.length > 30 ? content.substring(0, 30) + '...' : content;
 
           updatedConversation = {
             ...updatedConversation,
@@ -161,16 +161,16 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
             setSelectedConversation(updatedConversation);
           } else {
             const updatedMessages: Message[] = updatedConversation.messages.map(
-                (message, index) => {
-                  if (index === updatedConversation.messages.length - 1) {
-                    return {
-                      ...message,
-                      content: text,
-                    };
-                  }
+              (message, index) => {
+                if (index === updatedConversation.messages.length - 1) {
+                  return {
+                    ...message,
+                    content: text,
+                  };
+                }
 
-                  return message;
-                },
+                return message;
+              },
             );
 
             updatedConversation = {
@@ -183,7 +183,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         }
       } else {
         // send to chat file server
-        const response = await fetch(`/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}`, {
+        const response = await fetch(`/api/query?message=${message.content}&indexNames=${updatedConversation.indexes}`, {
           method: 'GET'
         });
 
@@ -258,7 +258,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
           code: data.error?.code,
           messageLines: [data.error?.message],
         });
-      } catch (e) {}
+      } catch (e) { }
       setModelError(error);
       return;
     }
@@ -357,16 +357,13 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
 
     const newConversation: Conversation = {
       id: lastConversation ? lastConversation.id + 1 : 1,
-      name: `${t('Conversation')} ${
-        lastConversation ? lastConversation.id + 1 : 1
-      }`,
+      name: `${t('Conversation')} ${lastConversation ? lastConversation.id + 1 : 1
+        }`,
       messages: [],
       model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: 0,
-      index: {
-        indexName: '',
-      },
+      indexes: [],
     };
 
     const updatedConversations = [...conversations, newConversation];
@@ -400,9 +397,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: 0,
-        index: {
-          indexName: '',
-        },
+        indexes: [],
       });
       localStorage.removeItem('selectedConversation');
     }
@@ -437,9 +432,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: 0,
-      index: {
-        indexName: '',
-      },
+      indexes: [],
     });
     localStorage.removeItem('selectedConversation');
 
@@ -542,9 +535,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: 0,
-        index: {
-          indexName: '',
-        },
+        indexes: [],
       });
     }
   }, [serverSideApiKeyIsSet]);

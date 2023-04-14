@@ -1,9 +1,10 @@
-import type {NextApiRequest, NextApiResponse} from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import fs from "fs";
 import fetch from "node-fetch";
 import FormData from 'form-data';
-import {IncomingForm} from 'formidable';
-import {CHAT_FILES_SERVER_HOST} from "@/utils/app/const";
+import { IncomingForm } from 'formidable';
+import { CHAT_FILES_SERVER_HOST } from "@/utils/app/const";
+// import { UploadedFile } from '@/types';
 
 export const config = {
     api: {
@@ -12,33 +13,41 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    console.log("beginning handler");
+    console.log("beginning POST handler");
 
-    const fData = await new Promise<{ fields: any, files: any }>((resolve, reject) => {
+    const fData = await new Promise<{ fields: any; files: any }>((resolve, reject) => {
         const form = new IncomingForm({
-            multiples: false
-        })
+            multiples: true,
+        });
         form.parse(req, (err, fields, files) => {
-            if (err) return reject(err)
-            resolve({ fields, files })
-        })
+            if (err) return reject(err);
+            resolve({ fields, files });
+        });
     });
 
-    if (fData?.files.file) {
-        const uploadFile = fData.files.file;
+    if (fData?.files.files) {
+        const uploadedFiles = Array.isArray(fData.files.files) ? fData.files.files : [fData.files.files];
         const formData = new FormData();
 
-        formData.append('file', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename)
-
-        const response = await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
-            method: 'POST',
-            body: formData
+        uploadedFiles.forEach((uploadFile: any) => {
+            formData.append('files', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename);
         });
+        try {
+            const response = await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
+                method: 'POST',
+                body: formData,
+            });
 
-        const result = await response.text();
+            const result = await response.json();
 
-        res.status(200).json(result);
+            res.status(200).json(result);
+        } catch (e) {
+            console.log('ERRRRR_____==', e)
+        }
+
     }
-}
-
+    else {
+        res.status(400).json({ message: 'No files were uploaded' });
+    }
+};
 export default handler;
