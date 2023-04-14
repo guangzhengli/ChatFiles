@@ -8,7 +8,6 @@ from file import get_index_path, get_index_name_from_file_name, check_index_file
     get_index_name_with_json_extension
 
 app = Flask(__name__)
-print("Initiling....")
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
