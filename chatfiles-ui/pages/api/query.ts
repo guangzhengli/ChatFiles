@@ -1,6 +1,6 @@
-import type {NextApiRequest, NextApiResponse} from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import fetch from "node-fetch";
-import {CHAT_FILES_SERVER_HOST} from "@/utils/app/const";
+import { CHAT_FILES_SERVER_HOST } from "@/utils/app/const";
 
 export const config = {
     api: {
@@ -9,15 +9,16 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    console.log("beginning handler");
-
+    console.log("beginning GET handler");
     const message: string = req.query.message as string;
-    const indexName: string = req.query.indexName as string;
+    const indexNames: string = req.query.indexNames as string;
 
-    console.log("handler chatfile query: ", message, indexName);
+    console.log("handler chatfile query: ", message, indexNames);
 
-    if (message && indexName) {
-        const response = await fetch(`${CHAT_FILES_SERVER_HOST}/query?message=${message}&indexName=${indexName}`, {
+    if (message && indexNames) {
+        const indexNamesArray = indexNames.split(",");
+        const indexNamesParam = indexNamesArray.join(",");
+        const response = await fetch(`${CHAT_FILES_SERVER_HOST}/query?message=${message}&indexNames=${indexNamesParam}`, {
             method: 'Get'
         });
 
@@ -25,5 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(200).json(result);
     }
 }
+
+
 
 export default handler;

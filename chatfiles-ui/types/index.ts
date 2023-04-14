@@ -38,7 +38,7 @@ export interface Conversation {
   model: OpenAIModel;
   prompt: string;
   folderId: number;
-  index: LlamaIndex;
+  indexes: LlamaIndex[];
 }
 
 export interface ChatBody {
