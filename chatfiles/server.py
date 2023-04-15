@@ -1,3 +1,4 @@
+import argparse
 import os
 
 from flask import Flask, request, make_response
@@ -55,10 +56,12 @@ def query_from_llama_index():
     except Exception as e:
         return "Error: {}".format(str(e)), 500
 
-
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Chat Files")
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode")
+    args = parser.parse_args()
     if not os.path.exists('./documents'):
         os.makedirs('./documents')
     if (os.environ.get('CHAT_FILES_MAX_SIZE') is not None):
         app.config['MAX_CONTENT_LENGTH'] = int(os.environ.get('CHAT_FILES_MAX_SIZE'))
-    app.run(port=5000, host='0.0.0.0')
+    app.run(port=5000, host='0.0.0.0',debug=args.debug)
