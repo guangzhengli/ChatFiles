@@ -1,7 +1,7 @@
-from llama_index import GPTSimpleVectorIndex, SimpleDirectoryReader
-
-from file import get_index_filepath, get_index_name_from_file_name, check_index_file_exists
-from llm import get_index_by_index_name
+import uuid
+from file import (check_index_file_exists,
+                  get_index_name_from_file_name)
+from llm import get_index_by_index_name, create_index, create_graph, get_graph_by_graph_name
 from prompt import get_prompt
 
 
@@ -12,12 +12,25 @@ def check_llama_index_exists(file_name):
 
 def create_llama_index(filepath):
     index_name = get_index_name_from_file_name(filepath)
-    documents = SimpleDirectoryReader(input_files=[filepath]).load_data()
-    index = GPTSimpleVectorIndex.from_documents(documents)
-    index.save_to_disk(get_index_filepath(index_name))
-    return index_name
+    index = create_index(filepath, index_name)
+    return index_name, index
 
 
-def get_answer_from_llama_index(text, index_name):
+def create_llama_graph_index(filepaths):
+    index_set = {}
+    for filepath in filepaths:
+        index_name, index = create_llama_index(filepath)
+        index_set[index_name] = index
+    graph_name = str(uuid.uuid4())
+    graph = create_graph(index_set, graph_name)
+    return graph_name, graph
+
+
+def get_answer_from_index(text, index_name):
     index = get_index_by_index_name(index_name)
     return index.query(text, text_qa_template=get_prompt())
+
+
+def get_answer_from_graph(text, graph_name):
+    graph = get_graph_by_graph_name(graph_name)
+    return graph.query(text)
