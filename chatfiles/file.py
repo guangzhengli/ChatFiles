@@ -6,7 +6,7 @@ index_file_dir = Path(index_path)
 
 def get_index_name_from_file_name(file_name):
     file_with_type = str(Path(file_name).relative_to(index_file_dir).name)
-    file_index_name = file_with_type.split('.')[0]
+    file_index_name = file_with_type.split('.')[0].replace(" ", "")
     return get_index_name_with_json_extension(file_index_name)
 
 
