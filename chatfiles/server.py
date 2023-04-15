@@ -6,9 +6,9 @@ from flask import Flask, request, make_response
 from chat import create_llama_index, get_answer_from_index, check_llama_index_exists, get_answer_from_graph, \
     create_llama_graph_index
 
-from file import get_index_path, get_index_name_from_file_name, check_index_file_exists, \
+from file import get_index_path, get_index_name_from_file_path, check_index_file_exists, \
     get_index_name_without_json_extension, clean_file, check_file_is_compressed, index_path, compress_path, \
-    decompress_files_and_get_filepaths
+    decompress_files_and_get_filepaths, clean_files
 
 app = Flask(__name__)
 
@@ -26,7 +26,7 @@ def upload_file():
             filepath = os.path.join(get_index_path(), os.path.basename(filename))
 
             if check_llama_index_exists(filepath) is True:
-                return get_index_name_without_json_extension(get_index_name_from_file_name(filepath))
+                return get_index_name_without_json_extension(get_index_name_from_file_path(filepath))
 
             uploaded_file.save(filepath)
 
@@ -40,6 +40,8 @@ def upload_file():
             filepaths = decompress_files_and_get_filepaths(uploaded_file)
             if filepaths is not None:
                 graph_name, graph = create_llama_graph_index(filepaths)
+
+            clean_files(filepaths)
             return make_response(
                 {"indexName": get_index_name_without_json_extension(graph_name), "indexType": "graph"}), 200
 

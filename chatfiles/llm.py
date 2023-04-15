@@ -19,6 +19,10 @@ service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor)
 
 
 def create_index(filepath, index_name):
+    index = get_index_by_index_name(index_name)
+    if index is not None:
+        return index
+
     index_name = get_name_with_json_extension(index_name)
     documents = SimpleDirectoryReader(input_files=[filepath]).load_data()
     index = GPTSimpleVectorIndex.from_documents(documents)
@@ -37,7 +41,10 @@ def get_index_by_index_name(index_name):
 
 def create_graph(index_sets, graph_name):
     graph_name = get_name_with_json_extension(graph_name)
-    graph = ComposableGraph.from_indices(GPTListIndex, index_sets, service_context=service_context)
+    graph = ComposableGraph.from_indices(GPTListIndex,
+                                         [index for _, index in index_sets.items()],
+                                         index_summaries=[f"This index contains {indexName}" for indexName, _ in index_sets.items()],
+                                         service_context=service_context)
     graph.save_to_disk(get_index_filepath(graph_name))
     return graph
 
