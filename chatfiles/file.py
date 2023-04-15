@@ -44,8 +44,8 @@ def check_index_file_exists(index_name):
     return get_index_filepath(index_name).is_file()
 
 
-def check_index_exists(file_name):
-    index_name = get_index_name_from_file_path(file_name)
+def check_index_exists(index_name):
+    index_name = get_name_with_json_extension(index_name)
     return check_index_file_exists(index_name)
 
 

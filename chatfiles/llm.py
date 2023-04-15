@@ -51,5 +51,6 @@ def create_graph(index_sets, graph_name):
 
 def get_graph_by_graph_name(graph_name):
     graph_name = get_name_with_json_extension(graph_name)
-    graph = ComposableGraph.load_from_disk(graph_name, service_context=service_context)
+    graph_path = get_index_filepath(graph_name)
+    graph = ComposableGraph.load_from_disk(graph_path, service_context=service_context)
     return graph
