@@ -6,7 +6,7 @@
 3. Some good starting questions like:
    1. What did the author say?
 
-## I hava a dream
+## The gift of the magi
 1. download file [The gift of the magi](./example/the_gift_of_the_magi.txt).
 2. upload to chatfiles.
 3. Some good starting questions like:
