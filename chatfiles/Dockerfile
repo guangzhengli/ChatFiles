@@ -1,6 +1,6 @@
 FROM python:3.8-slim-buster
 
-RUN sudo apt-get install gcc
+RUN apt-get install gcc
 
 WORKDIR /app
 
