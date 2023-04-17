@@ -183,7 +183,8 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         }
       } else {
         // send to chat file server
-        const response = await fetch(`/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}`, {
+        const response = await fetch(
+            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}&indexType=${updatedConversation.index.indexType}`, {
           method: 'GET'
         });
 
@@ -366,6 +367,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       folderId: 0,
       index: {
         indexName: '',
+        indexType: '',
       },
     };
 
@@ -402,6 +404,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         folderId: 0,
         index: {
           indexName: '',
+          indexType: '',
         },
       });
       localStorage.removeItem('selectedConversation');
@@ -439,6 +442,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       folderId: 0,
       index: {
         indexName: '',
+        indexType: '',
       },
     });
     localStorage.removeItem('selectedConversation');
@@ -544,6 +548,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         folderId: 0,
         index: {
           indexName: '',
+          indexType: '',
         },
       });
     }

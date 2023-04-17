@@ -61,4 +61,5 @@ export interface ErrorMessage {
 
 export interface LlamaIndex {
   indexName: string;
+  indexType: string;
 }
