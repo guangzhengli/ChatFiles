@@ -62,4 +62,4 @@ python3 server.py
 
 - [x] Chat with GPT-3.5
 - [x] Chat with file by llama_index
-- [ ] Upload multiple files to one index, chat with multiple files.
+- [x] Upload multiple files to one index, chat with multiple files.

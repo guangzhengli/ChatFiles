@@ -1,5 +1,5 @@
 import {LlamaIndex} from "@/types";
-import { CHAT_FILES_MAX_SIZE } from "@/utils/app/const";
+import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
 import {humanFileSize} from "@/utils/app/files";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
     handleIsUploadSuccess: (isUploadSuccess: boolean) => void;
     handleUploadError: (error: string) => void;
 }
+
 export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess, handleUploadError}: Props) => {
 
     const handleFile = async (file: File) => {
@@ -22,15 +23,15 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
             const formData = new FormData();
             formData.append("file", file);
 
-            const response = await fetch('/api/upload', {
+            await fetch('/api/upload', {
                 method: 'POST',
                 body: formData
-            });
+            }).then(res => res.json())
+                .then((data: LlamaIndex) => {
+                    onIndexChange({indexName: data.indexName, indexType: data.indexType});
+                    console.log("import file index json name:", data.indexName);
+                });
 
-            const indexName = await response.json() as string;
-
-            console.log("import file index json name:", indexName)
-            onIndexChange({ indexName: indexName });
             handleIsUploading(false);
             handleIsUploadSuccess(true)
         } catch (e) {
@@ -45,11 +46,11 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         console.log(`select a file size: ${humanFileSize(file.size)}`);
         console.log(`file max size: ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
         if (CHAT_FILES_MAX_SIZE != 0 && file.size > CHAT_FILES_MAX_SIZE) {
-          handleUploadError(`Please select a file smaller than ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
-          return false;
+            handleUploadError(`Please select a file smaller than ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
+            return false;
         }
         return true;
-      };
+    };
 
     return (
         <div className="flex items-center justify-center w-full">
@@ -63,7 +64,8 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
                     </svg>
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
                         drag and drop</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">File supported types: TXT, PDF, EPUB, Markdown...</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">File supported types: TXT, PDF, EPUB,
+                        Markdown...</p>
                 </div>
                 <input id="dropzone-file" type="file" className="hidden" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {

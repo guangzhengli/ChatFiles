@@ -1,9 +1,11 @@
 Flask==2.2.3
-langchain==0.0.133
-llama-index==0.5.9
+langchain==0.0.139
+llama-index==0.5.15
 openai==0.27.4
 python-dotenv==1.0.0
 PyPDF2==3.0.1
 EbookLib==0.18
 docx2txt==0.8
 html2text==2020.1.16
+rarfile==4.0
+py7zr==0.20.5

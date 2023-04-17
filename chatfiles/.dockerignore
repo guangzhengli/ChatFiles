@@ -1,6 +1,7 @@
 # flyctl launch added from .gitignore
 **/__pycache__
 **/*documents
+**/*decompress
 **/*pure
 
 # Environments

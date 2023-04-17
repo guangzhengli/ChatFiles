@@ -4,6 +4,7 @@ import fetch from "node-fetch";
 import FormData from 'form-data';
 import {IncomingForm} from 'formidable';
 import {CHAT_FILES_SERVER_HOST} from "@/utils/app/const";
+import {LlamaIndex} from "@/types";
 
 export const config = {
     api: {
@@ -30,14 +31,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         formData.append('file', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename)
 
-        const response = await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
+        await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
             method: 'POST',
             body: formData
-        });
+        }).then(res => res.json())
+            .then((data) => {
+                res.status(200).json(data)
+            });
 
-        const result = await response.text();
-
-        res.status(200).json(result);
     }
 }
 
