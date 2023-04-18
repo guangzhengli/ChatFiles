@@ -65,7 +65,7 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or
                         drag and drop</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">File supported types: TXT, PDF, EPUB,
-                        Markdown...</p>
+                        Markdown, Zip...</p>
                 </div>
                 <input id="dropzone-file" type="file" className="hidden" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
