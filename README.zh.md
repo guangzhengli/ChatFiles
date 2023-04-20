@@ -5,7 +5,7 @@
 
 ## 如何使用
 
-浏览器打开：https://chatfiles-ui.fly.dev。
+浏览器打开：https://chatfiles-ui.fly.dev 。
 上传文件对话，可以看看这些好的例子: [Good Example](./doc/Example.md)
 
 ### 如何无限制的本地运行
