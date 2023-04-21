@@ -1,5 +1,7 @@
 [![My Skills](https://skillicons.dev/icons?i=nextjs,tailwind,react,python,flask)](https://skillicons.dev)<a href="https://www.buymeacoffee.com/iguangzhengli" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
+> ⚠️⚠️⚠️警告：由于我的 Openai key 额度已用完，并且我无法充值，网页 demo 暂时无法服务。如果有需要，请自行在本地运行。感谢。
+
 # ChatFiles
 **上传文件然后与之对话.**
 
