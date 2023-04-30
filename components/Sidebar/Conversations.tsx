@@ -24,17 +24,20 @@ export const Conversations: FC<Props> = ({
 }) => {
   return (
     <div className="flex w-full flex-col gap-1 pt-2">
-      {conversations.slice().reverse().map((conversation, index) => (
-        <ConversationComponent
-          key={index}
-          selectedConversation={selectedConversation}
-          conversation={conversation}
-          loading={loading}
-          onSelectConversation={onSelectConversation}
-          onDeleteConversation={onDeleteConversation}
-          onUpdateConversation={onUpdateConversation}
-        />
-      ))}
+      {conversations
+        .slice()
+        .reverse()
+        .map((conversation, index) => (
+          <ConversationComponent
+            key={index}
+            selectedConversation={selectedConversation}
+            conversation={conversation}
+            loading={loading}
+            onSelectConversation={onSelectConversation}
+            onDeleteConversation={onDeleteConversation}
+            onUpdateConversation={onUpdateConversation}
+          />
+        ))}
     </div>
   );
 };

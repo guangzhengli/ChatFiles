@@ -52,7 +52,7 @@ export const SystemPrompt: FC<Props> = ({ conversation, onChangePrompt }) => {
       </label>
       <textarea
         ref={textareaRef}
-        className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-neutral-900 focus:outline-none bg-transparent dark:border-neutral-600 dark:text-neutral-100"
+        className="w-full rounded-lg border border-neutral-200 bg-transparent px-4 py-3 text-neutral-900 focus:outline-none dark:border-neutral-600 dark:text-neutral-100"
         style={{
           resize: 'none',
           bottom: `${textareaRef?.current?.scrollHeight}px`,

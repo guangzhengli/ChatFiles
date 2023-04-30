@@ -43,7 +43,7 @@ Follow the instructions in your terminal:
 Set the required environment variables:
 
 ```
-flyctl secrets set OPENAI_API_KEY=your_openai_api_key 
+flyctl secrets set OPENAI_API_KEY=your_openai_api_key
 ```
 
 Alternatively, you could set environment variables in the [Fly.io Console](https://fly.io/dashboard).

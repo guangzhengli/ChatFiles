@@ -79,7 +79,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       setMessageIsStreaming(true);
       setMessageError(false);
 
-
       if (updatedConversation.index.indexName.length === 0) {
         const chatBody: ChatBody = {
           model: updatedConversation.model,
@@ -118,7 +117,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         if (updatedConversation.messages.length === 1) {
           const { content } = message;
           const customName =
-              content.length > 30 ? content.substring(0, 30) + '...' : content;
+            content.length > 30 ? content.substring(0, 30) + '...' : content;
 
           updatedConversation = {
             ...updatedConversation,
@@ -161,16 +160,16 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
             setSelectedConversation(updatedConversation);
           } else {
             const updatedMessages: Message[] = updatedConversation.messages.map(
-                (message, index) => {
-                  if (index === updatedConversation.messages.length - 1) {
-                    return {
-                      ...message,
-                      content: text,
-                    };
-                  }
+              (message, index) => {
+                if (index === updatedConversation.messages.length - 1) {
+                  return {
+                    ...message,
+                    content: text,
+                  };
+                }
 
-                  return message;
-                },
+                return message;
+              },
             );
 
             updatedConversation = {
@@ -184,11 +183,13 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       } else {
         // send to chat file server
         const response = await fetch(
-            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}&indexType=${updatedConversation.index.indexType}`, {
-          method: 'GET'
-        });
+          `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}&indexType=${updatedConversation.index.indexType}`,
+          {
+            method: 'GET',
+          },
+        );
 
-        const answer = await response.json() as string;
+        const answer = (await response.json()) as string;
 
         const updatedMessages: Message[] = [
           ...updatedConversation.messages,
@@ -200,11 +201,10 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
           messages: updatedMessages,
         };
 
-        setLoading(false)
+        setLoading(false);
 
         setSelectedConversation(updatedConversation);
       }
-
 
       saveConversation(updatedConversation);
 
@@ -559,7 +559,10 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       <Head>
         <title>ChatFiles</title>
         <meta name="description" content="ChatGPT but better." />
-        <meta name="viewport" content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {selectedConversation && (
