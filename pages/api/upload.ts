@@ -27,18 +27,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (fData?.files.file) {
         const uploadFile = fData.files.file;
-        const formData = new FormData();
+        console.log(uploadFile);
+        // const formData = new FormData();
 
-        formData.append('file', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename)
+        // formData.append('file', fs.createReadStream(uploadFile.filepath), uploadFile.originalFilename)
 
-        await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
-            method: 'POST',
-            body: formData
-        }).then(res => res.json())
-            .then((data) => {
-                res.status(200).json(data)
-            });
-
+        // await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
+        //     method: 'POST',
+        //     body: formData
+        // }).then(res => res.json())
+        //     .then((data) => {
+        //         res.status(200).json(data)
+        //     });
     }
 }
 
