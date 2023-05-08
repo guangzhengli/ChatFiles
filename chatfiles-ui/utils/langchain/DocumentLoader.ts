@@ -34,8 +34,7 @@ export function getDocumentLoader(fileType: string, filePath: string): DocumentL
 
 export function getDirectoryLoader(path: string): DocumentLoader {
     return new DirectoryLoader(
-        "src/document_loaders/example_data/example",
-        {
+        path, {
             ".pdf": (path) => getDocumentLoader("pdf", path),
             ".epub": (path) => getDocumentLoader("epub", path),
             ".txt": (path) => getDocumentLoader("txt", path),
