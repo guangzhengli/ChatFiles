@@ -17,6 +17,7 @@
     "flowbite": "^1.6.4",
     "formidable": "^2.1.1",
     "i18next": "^22.4.13",
+    "langchain": "^0.0.72",
     "next": "13.2.4",
     "next-i18next": "^13.2.2",
     "node-fetch": "^3.3.1",
