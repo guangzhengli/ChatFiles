@@ -2,6 +2,7 @@ import {LlamaIndex} from "@/types";
 import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
 import {humanFileSize} from "@/utils/app/files";
 import {useTranslation} from 'next-i18next';
+import {v4 as uuidv4} from 'uuid';
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
@@ -23,20 +24,12 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         handleIsUploading(true);
 
         try {
-            const formData = new FormData();
-            formData.append("file", file);
-
-            await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            }).then(res => res.json())
-                .then((data: LlamaIndex) => {
-                    onIndexChange({indexName: data.indexName, indexType: data.indexType});
-                    console.log("import file index json name:", data.indexName);
-                });
+            const fileTempName = uuidv4();
+            await uploadFile(file, fileTempName);
 
             handleIsUploading(false);
             handleIsUploadSuccess(true)
+
         } catch (e) {
             console.error(e);
             handleUploadError((e as Error).message);
@@ -54,6 +47,31 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         }
         return true;
     };
+
+    const uploadFile = async (file: File, fileTempName: string) => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        await fetch(`/api/files?fileName=${fileTempName}`, {
+            method: 'POST',
+            body: formData
+        }).then(res => res.json())
+            .then((data: any) => {
+                // onIndexChange({indexName: data.indexName, indexType: data.indexType});
+                console.log("import file index json name:", data);
+            });
+    }
+
+    const deleteFile = async (fileTempName: string) => {
+
+        await fetch(`/api/files?fileName=${fileTempName}`, {
+            method: 'DELETE'
+        }).then(res => res.json())
+            .then((data: any) => {
+                // onIndexChange({indexName: data.indexName, indexType: data.indexType});
+                console.log("import file index json name:", data);
+            });
+    }
 
     return (
         <div className="flex items-center justify-center w-full">
