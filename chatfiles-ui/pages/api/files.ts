@@ -22,7 +22,7 @@ const upload = multer({
 });
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    console.log("beginning handler");
+    console.log("beginning files handler");
 
     if (req.method === 'POST') {
         upload.single('file')(req as any, res as any, (err: any) => {
