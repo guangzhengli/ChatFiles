@@ -24,7 +24,8 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         handleIsUploading(true);
 
         try {
-            const fileTempName = uuidv4();
+            const fileTempName = `${uuidv4()}.${file.name.split('.').pop()}`;
+
             await uploadFile(file, fileTempName);
 
             handleIsUploading(false);
