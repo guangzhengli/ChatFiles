@@ -1,22 +1,24 @@
-from flask import Flask, request, make_response, jsonify
-
-from merge import merge_pdfs
-
 import argparse
 import os
+
+from flask import Flask, request, make_response, jsonify
 
 from chat import (
     create_llama_index,
     get_answer_from_index,
     check_llama_index_exists,
+    get_answer_from_graph,
+    create_llama_graph_index,
 )
 
 from file import (
     get_single_file_upload_path,
     get_index_name_from_single_file_path,
+    check_index_file_exists,
     get_index_name_without_json_extension,
     clean_file,
     single_file_upload_path,
+    multi_file_upload_path,
     check_index_exists,
 )
 
@@ -29,17 +31,20 @@ def upload_file():
         return "Please send a POST request with a file", 400
 
     filepaths = []
+    uploaded_files = list(request.files.values())
 
     for file in request.files.values():
         uploaded_file = file
         filename = uploaded_file.filename
-        filepath = os.path.join(
-            get_single_file_upload_path(), os.path.basename(filename)
-        )
+        # Use different file upload paths based on the number of files in the request
+        if len(uploaded_files) > 1:
+            filepath = os.path.join(multi_file_upload_path, os.path.basename(filename))
+        else:
+            filepath = os.path.join(
+                get_single_file_upload_path(), os.path.basename(filename)
+            )
         uploaded_file.save(filepath)
         filepaths.append(filepath)
-
-    print("filepathssssssssssssssssssssssssssssssss", filepaths)
 
     if len(filepaths) == 1:
         filepath = filepaths[0]
@@ -62,22 +67,15 @@ def upload_file():
         )
 
     elif len(filepaths) > 1:
-        output_dir = "./documents"
-        output_filename = "merged.pdf"
-        merge_pdfs(filepaths, output_dir, output_filename)
-        output_path = os.path.join(output_dir, output_filename)
-
-        index_name, index = create_llama_index(output_path)
-
-        clean_file(output_path)
+        graph_name, graph = create_llama_graph_index(filepaths)
 
         for filepath in filepaths:
             clean_file(filepath)
         return (
             make_response(
                 {
-                    "indexName": get_index_name_without_json_extension(index_name),
-                    "indexType": "index",
+                    "indexName": get_index_name_without_json_extension(graph_name),
+                    "indexType": "graph",
                 }
             ),
             200,
@@ -100,6 +98,8 @@ def query_from_llama_index():
 
         if index_type == "index":
             answer = get_answer_from_index(message, index_name)
+        elif index_type == "graph":
+            answer = get_answer_from_graph(message, index_name)
 
         return make_response(str(answer.response)), 200
     except Exception as e:
@@ -118,6 +118,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if not os.path.exists(single_file_upload_path):
         os.makedirs(single_file_upload_path)
+    if not os.path.exists(multi_file_upload_path):
+        os.makedirs(multi_file_upload_path)
     if os.environ.get("CHAT_FILES_MAX_SIZE") is not None:
         app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("CHAT_FILES_MAX_SIZE"))
     app.run(port=5000, host="0.0.0.0", debug=args.debug)

@@ -2,8 +2,6 @@ import os
 import openai
 from langchain.chat_models import ChatOpenAI
 from llama_index import (
-    ComposableGraph,
-    GPTListIndex,
     LLMPredictor,
     GPTSimpleVectorIndex,
     ServiceContext,
@@ -48,25 +46,3 @@ def get_index_by_index_name(index_name):
         index_filepath, service_context=service_context
     )
     return index
-
-
-def create_graph(index_sets, graph_name):
-    graph_name = get_name_with_json_extension(graph_name)
-    graph = ComposableGraph.from_indices(
-        GPTListIndex,
-        [index for _, index in index_sets.items()],
-        index_summaries=[
-            f"This index contains {indexName}" for indexName, _ in index_sets.items()
-        ],
-        service_context=service_context,
-    )
-    graph.save_to_disk(get_single_file_upload_filepath(graph_name))
-    return graph
-
-
-def get_graph_by_graph_name(graph_name):
-    graph_name = get_name_with_json_extension(graph_name)
-    graph_path = get_single_file_upload_filepath(graph_name)
-    graph = ComposableGraph.load_from_disk(graph_path, service_context=service_context)
-    print("\nComposable graph: ", graph, "\n")
-    return graph
