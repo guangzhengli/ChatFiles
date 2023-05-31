@@ -6,7 +6,6 @@ import {
   ChatFolder,
   Conversation,
   ErrorMessage,
-  KeyValuePair,
   Message,
   OpenAIModel,
   OpenAIModelID,
@@ -24,23 +23,31 @@ import {
 } from '@/utils/app/conversation';
 import { saveFolders } from '@/utils/app/folders';
 import { exportData, importData } from '@/utils/app/importExport';
-import { IconArrowBarLeft, IconArrowBarRight } from '@tabler/icons-react';
+import { IconArrowBarRight } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import useConversations from '@/hooks/useConversation';
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
 }
 
 const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
+  const {
+    conversations,
+    setConversations,
+    selectedConversation,
+    setSelectedConversation,
+    handleNewConversation,
+    handleDeleteConversation,
+    handleUpdateConversation,
+  } = useConversations();
+
   const { t } = useTranslation('chat');
   const [folders, setFolders] = useState<ChatFolder[]>([]);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] =
-    useState<Conversation>();
   const [loading, setLoading] = useState<boolean>(false);
   const [models, setModels] = useState<OpenAIModel[]>([]);
   const [lightMode, setLightMode] = useState<'dark' | 'light'>('dark');
@@ -53,227 +60,163 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
 
   const stopConversationRef = useRef<boolean>(false);
 
-  const handleSend = async (message: Message, deleteCount = 0) => {
-    if (selectedConversation) {
-      let updatedConversation: Conversation;
+  const fetchChat = async (chatBody: ChatBody) => {
+    const controller = new AbortController();
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+      body: JSON.stringify(chatBody),
+    });
+    if (!response.ok) throw Error('Chat fetch failed');
+    return response.body.getReader();
+  };
+
+  const fetchQuery = async (message: Message, index) => {
+    const response = await fetch(
+      `/api/query?message=${message.content}&indexName=${index.indexName}&indexType=${index.indexType}`,
+      {
+        method: 'GET',
+      },
+    );
+    const answer = await response.json();
+    return answer;
+  };
+
+  const updateConversationMessages = (
+    conversation: Conversation,
+    message: Message,
+  ) => {
+    return {
+      ...conversation,
+      messages: [...conversation.messages, message],
+    };
+  };
+
+  const handleErrorState = () => {
+    setLoading(false);
+    setMessageIsStreaming(false);
+    setMessageError(true);
+  };
+
+  const handleSend = useCallback(
+    async (message: Message, deleteCount = 0) => {
+      if (!selectedConversation) return;
+
+      let updatedConversation = selectedConversation;
+      console.log(updatedConversation, 'updatedConversation');
 
       if (deleteCount) {
-        const updatedMessages = [...selectedConversation.messages];
-        for (let i = 0; i < deleteCount; i++) {
-          updatedMessages.pop();
-        }
-
-        updatedConversation = {
-          ...selectedConversation,
-          messages: [...updatedMessages, message],
-        };
-      } else {
-        updatedConversation = {
-          ...selectedConversation,
-          messages: [...selectedConversation.messages, message],
-        };
+        updatedConversation.messages.splice(-deleteCount);
       }
+      updatedConversation = updateConversationMessages(
+        updatedConversation,
+        message,
+      );
 
       setSelectedConversation(updatedConversation);
       setLoading(true);
       setMessageIsStreaming(true);
       setMessageError(false);
 
+      try {
+        if (updatedConversation?.index?.indexName?.length === 0) {
+          const chatBody: ChatBody = {
+            model: updatedConversation.model,
+            messages: updatedConversation.messages,
+            key: apiKey,
+            prompt: updatedConversation.prompt,
+          };
+          const reader = await fetchChat(chatBody);
+        } else {
+          const answer = await fetchQuery(message, updatedConversation.index);
+          const newMessage = { role: 'assistant', content: answer };
+          updatedConversation = updateConversationMessages(
+            updatedConversation,
+            newMessage as Message,
+          );
+        }
 
-      if (updatedConversation.index.indexName.length === 0) {
-        const chatBody: ChatBody = {
-          model: updatedConversation.model,
-          messages: updatedConversation.messages,
-          key: apiKey,
-          prompt: updatedConversation.prompt,
-        };
+        setLoading(false);
+        setSelectedConversation(updatedConversation);
+        saveConversation(updatedConversation);
+        const updatedConversations: Conversation[] = conversations.map(
+          (conversation) => {
+            if (conversation.id === selectedConversation.id) {
+              return updatedConversation;
+            }
 
-        const controller = new AbortController();
-        const response = await fetch('/api/chat', {
+            return conversation;
+          },
+        );
+
+        setConversations(updatedConversations);
+        saveConversations(updatedConversations);
+        setMessageIsStreaming(false);
+      } catch (error) {
+        handleErrorState();
+      }
+    },
+    [
+      conversations,
+      selectedConversation,
+      apiKey,
+      setConversations,
+      setSelectedConversation,
+    ],
+  );
+
+  const fetchModels = useCallback(
+    async (key: string) => {
+      const error = {
+        title: t('Error fetching models.'),
+        code: null,
+        messageLines: [
+          t(
+            'Make sure your OpenAI API key is set in the bottom left of the sidebar.',
+          ),
+          t('If you completed this step, OpenAI may be experiencing issues.'),
+        ],
+      } as ErrorMessage;
+
+      try {
+        const response = await fetch('/api/models', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          signal: controller.signal,
-          body: JSON.stringify(chatBody),
+          body: JSON.stringify({
+            key,
+          }),
         });
 
         if (!response.ok) {
-          setLoading(false);
-          setMessageIsStreaming(false);
-          setMessageError(true);
+          const data = await response.json();
+          Object.assign(error, {
+            code: data.error?.code,
+            messageLines: [data.error?.message],
+          });
+          setModelError(error);
           return;
         }
 
-        const data = response.body;
+        const data = await response.json();
 
         if (!data) {
-          setLoading(false);
-          setMessageIsStreaming(false);
-          setMessageError(true);
-
+          setModelError(error);
           return;
         }
 
-        if (updatedConversation.messages.length === 1) {
-          const { content } = message;
-          const customName =
-              content.length > 30 ? content.substring(0, 30) + '...' : content;
-
-          updatedConversation = {
-            ...updatedConversation,
-            name: customName,
-          };
-        }
-
-        setLoading(false);
-
-        const reader = data.getReader();
-        const decoder = new TextDecoder();
-        let done = false;
-        let isFirst = true;
-        let text = '';
-
-        while (!done) {
-          if (stopConversationRef.current === true) {
-            controller.abort();
-            done = true;
-            break;
-          }
-          const { value, done: doneReading } = await reader.read();
-          done = doneReading;
-          const chunkValue = decoder.decode(value);
-
-          text += chunkValue;
-
-          if (isFirst) {
-            isFirst = false;
-            const updatedMessages: Message[] = [
-              ...updatedConversation.messages,
-              { role: 'assistant', content: chunkValue },
-            ];
-
-            updatedConversation = {
-              ...updatedConversation,
-              messages: updatedMessages,
-            };
-
-            setSelectedConversation(updatedConversation);
-          } else {
-            const updatedMessages: Message[] = updatedConversation.messages.map(
-                (message, index) => {
-                  if (index === updatedConversation.messages.length - 1) {
-                    return {
-                      ...message,
-                      content: text,
-                    };
-                  }
-
-                  return message;
-                },
-            );
-
-            updatedConversation = {
-              ...updatedConversation,
-              messages: updatedMessages,
-            };
-
-            setSelectedConversation(updatedConversation);
-          }
-        }
-      } else {
-        // send to chat file server
-        const response = await fetch(
-            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}&indexType=${updatedConversation.index.indexType}`, {
-          method: 'GET'
-        });
-
-        const answer = await response.json() as string;
-
-        const updatedMessages: Message[] = [
-          ...updatedConversation.messages,
-          { role: 'assistant', content: answer },
-        ];
-
-        updatedConversation = {
-          ...updatedConversation,
-          messages: updatedMessages,
-        };
-
-        setLoading(false)
-
-        setSelectedConversation(updatedConversation);
+        setModels(data);
+        setModelError(null);
+      } catch (e) {
+        setModelError(error);
       }
-
-
-      saveConversation(updatedConversation);
-
-      const updatedConversations: Conversation[] = conversations.map(
-        (conversation) => {
-          if (conversation.id === selectedConversation.id) {
-            return updatedConversation;
-          }
-
-          return conversation;
-        },
-      );
-
-      if (updatedConversations.length === 0) {
-        updatedConversations.push(updatedConversation);
-      }
-
-      setConversations(updatedConversations);
-
-      saveConversations(updatedConversations);
-
-      setMessageIsStreaming(false);
-    }
-  };
-
-  const fetchModels = async (key: string) => {
-    const error = {
-      title: t('Error fetching models.'),
-      code: null,
-      messageLines: [
-        t(
-          'Make sure your OpenAI API key is set in the bottom left of the sidebar.',
-        ),
-        t('If you completed this step, OpenAI may be experiencing issues.'),
-      ],
-    } as ErrorMessage;
-
-    const response = await fetch('/api/models', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        key,
-      }),
-    });
-
-    if (!response.ok) {
-      try {
-        const data = await response.json();
-        Object.assign(error, {
-          code: data.error?.code,
-          messageLines: [data.error?.message],
-        });
-      } catch (e) {}
-      setModelError(error);
-      return;
-    }
-
-    const data = await response.json();
-
-    if (!data) {
-      setModelError(error);
-      return;
-    }
-
-    setModels(data);
-    setModelError(null);
-  };
+    },
+    [t],
+  );
 
   const handleLightMode = (mode: 'dark' | 'light') => {
     setLightMode(mode);
@@ -353,82 +296,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
     saveFolders(updatedFolders);
   };
 
-  const handleNewConversation = () => {
-    const lastConversation = conversations[conversations.length - 1];
-
-    const newConversation: Conversation = {
-      id: lastConversation ? lastConversation.id + 1 : 1,
-      name: `${t('Conversation')} ${
-        lastConversation ? lastConversation.id + 1 : 1
-      }`,
-      messages: [],
-      model: OpenAIModels[OpenAIModelID.GPT_3_5],
-      prompt: DEFAULT_SYSTEM_PROMPT,
-      folderId: 0,
-      index: {
-        indexName: '',
-        indexType: '',
-      },
-    };
-
-    const updatedConversations = [...conversations, newConversation];
-
-    setSelectedConversation(newConversation);
-    setConversations(updatedConversations);
-
-    saveConversation(newConversation);
-    saveConversations(updatedConversations);
-
-    setLoading(false);
-  };
-
-  const handleDeleteConversation = (conversation: Conversation) => {
-    const updatedConversations = conversations.filter(
-      (c) => c.id !== conversation.id,
-    );
-    setConversations(updatedConversations);
-    saveConversations(updatedConversations);
-
-    if (updatedConversations.length > 0) {
-      setSelectedConversation(
-        updatedConversations[updatedConversations.length - 1],
-      );
-      saveConversation(updatedConversations[updatedConversations.length - 1]);
-    } else {
-      setSelectedConversation({
-        id: 1,
-        name: 'New conversation',
-        messages: [],
-        model: OpenAIModels[OpenAIModelID.GPT_3_5],
-        prompt: DEFAULT_SYSTEM_PROMPT,
-        folderId: 0,
-        index: {
-          indexName: '',
-          indexType: '',
-        },
-      });
-      localStorage.removeItem('selectedConversation');
-    }
-  };
-
-  const handleUpdateConversation = (
-    conversation: Conversation,
-    data: KeyValuePair,
-  ) => {
-    const updatedConversation = {
-      ...conversation,
-      [data.key]: data.value,
-    };
-
-    const { single, all } = updateConversation(
-      updatedConversation,
-      conversations,
-    );
-
-    setSelectedConversation(single);
-    setConversations(all);
-  };
-
   const handleClearConversations = () => {
     setConversations([]);
     localStorage.removeItem('conversationHistory');
@@ -483,7 +350,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       handleSend(currentMessage);
       setCurrentMessage(undefined);
     }
-  }, [currentMessage]);
+  }, [currentMessage, handleSend]);
 
   useEffect(() => {
     if (window.innerWidth < 640) {
@@ -495,7 +362,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
     if (apiKey) {
       fetchModels(apiKey);
     }
-  }, [apiKey]);
+  }, [apiKey, fetchModels]);
 
   useEffect(() => {
     const theme = localStorage.getItem('theme');
@@ -552,14 +419,22 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         },
       });
     }
-  }, [serverSideApiKeyIsSet]);
+  }, [
+    serverSideApiKeyIsSet,
+    fetchModels,
+    setConversations,
+    setSelectedConversation,
+  ]);
 
   return (
     <>
       <Head>
         <title>ChatFiles</title>
         <meta name="description" content="ChatGPT but better." />
-        <meta name="viewport" content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {selectedConversation && (
