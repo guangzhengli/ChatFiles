@@ -13,8 +13,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const indexName: string = req.query.indexName as string;
   const indexType: string = req.query.indexType as string;
 
-  console.log('handler chatfile query: ', message, indexName);
-
   if (message && indexName) {
     const response = await fetch(
       `${CHAT_FILES_SERVER_HOST}/query?message=${message}&indexName=${indexName}&indexType=${indexType}`,

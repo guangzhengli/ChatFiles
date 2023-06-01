@@ -57,7 +57,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const [modelError, setModelError] = useState<ErrorMessage | null>(null);
   const [currentMessage, setCurrentMessage] = useState<Message>();
   const stopConversationRef = useRef<boolean>(false);
-  console.log('conversations', conversations.length);
   const fetchChat = async (chatBody: ChatBody) => {
     const controller = new AbortController();
     const response = await fetch('/api/chat', {

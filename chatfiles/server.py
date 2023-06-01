@@ -5,17 +5,8 @@ import argparse
 import os
 from pathlib import Path
 
-# from helpers import (
-#     get_answer_from_index,
-#     clean_file,
-# )
 
-from single import create_index, get_answer_from_index, clean_file
-
-from llama_index import (
-    GPTSimpleVectorIndex,
-    SimpleDirectoryReader,
-)
+from utils import create_index, get_answer_from_index, clean_file
 
 app = Flask(__name__)
 
@@ -38,32 +29,22 @@ def upload_file():
         filepaths.append(filepath)
         filenames.append(filename)
 
-    documents = SimpleDirectoryReader(input_dir="./documents").load_data()
-    index = GPTSimpleVectorIndex.from_documents(documents)
+    index_name = (
+        str(uuid.uuid4()) if len(filepaths) > 1 else os.path.splitext(filenames[0])[0]
+    )
 
-    json_filename = None
+    index = create_index(filepaths, index_name)
 
-    if len(filepaths) == 1:
-        json_filename = os.path.splitext(filenames[0])[0]
-        json_filepath = f"./documents/{json_filename}.json"
-        index.save_to_disk(json_filepath)
-        clean_file(filepaths[0])
+    if index is None:
+        return "Failed to create index", 500
 
-    elif len(filepaths) > 1:
-        json_filename = f"{str(uuid.uuid4())}"
-        json_filepath = f"./documents/{json_filename}.json"
-        index.save_to_disk(json_filepath)
-
-        for filepath in filepaths:
-            clean_file(filepath)
-
-    else:
-        return "No files found in request", 400
+    for filepath in filepaths:
+        clean_file(filepath)
 
     return (
         make_response(
             {
-                "indexName": json_filename,
+                "indexName": index_name,
                 "indexType": "index",
                 "fileNames": filenames,
             }
@@ -77,9 +58,7 @@ def query_from_llama_index():
     try:
         message = request.args.get("message")
         index_name = request.args.get("indexName")
-        print("\nindex name is ", index_name)
         index_type = request.args.get("indexType")
-        print("\nindex type is ", index_type)
         index_file_path = Path(file_upload_path) / f"{index_name}.json"
 
         if not os.path.isfile(index_file_path):

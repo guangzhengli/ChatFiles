@@ -28,19 +28,17 @@ def create_index(filepath, index_name):
     if index_name is None:
         raise ValueError("index_name cannot be None")
 
-    # Ensuring the index_name has .json extension
     index_name = index_name if index_name.endswith(".json") else index_name + ".json"
 
     index_filepath = file_upload_dir / index_name
 
-    # Check if the index file already exists
     if index_filepath.is_file():
         index = GPTSimpleVectorIndex.load_from_disk(
             index_filepath, service_context=service_context
         )
         return index
 
-    documents = SimpleDirectoryReader(input_files=[filepath]).load_data()
+    documents = SimpleDirectoryReader(input_files=filepath).load_data()
     index = GPTSimpleVectorIndex.from_documents(documents)
     index.save_to_disk(index_filepath)
 

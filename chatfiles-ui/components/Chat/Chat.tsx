@@ -52,7 +52,6 @@ export const Chat: FC<Props> = memo(
     stopConversationRef,
   }) => {
     const { t } = useTranslation('chat');
-    console.log('conversation index fileNames', conversation);
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
     const [showSettings, setShowSettings] = useState<boolean>(false);

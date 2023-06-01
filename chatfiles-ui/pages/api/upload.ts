@@ -43,8 +43,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
       });
 
-      console.log('Formdata', formData);
-
       const response = await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
         method: 'POST',
         body: formData,

@@ -52,7 +52,6 @@ export const Upload = ({
               indexType: item.indexType,
               fileNames: item.fileNames,
             });
-            console.log('import file index json name:', item);
           });
         });
 
@@ -67,8 +66,6 @@ export const Upload = ({
   };
 
   const validateFile = (file: File) => {
-    console.log(`select a file size: ${humanFileSize(file.size)}`);
-    console.log(`file max size: ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
     if (CHAT_FILES_MAX_SIZE != 0 && file.size > CHAT_FILES_MAX_SIZE) {
       handleUploadError(
         `Please select a file smaller than ${humanFileSize(
