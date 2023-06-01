@@ -6,7 +6,6 @@ import {
   OpenAIModel,
 } from '@/types';
 import { throttle } from '@/utils';
-import { IconClearAll, IconSettings } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import { FC, memo, MutableRefObject, useEffect, useRef, useState } from 'react';
 import { ChatInput } from './ChatInput';
@@ -16,6 +15,8 @@ import { ErrorMessageDiv } from './ErrorMessageDiv';
 import { ModelSelect } from './ModelSelect';
 import { Upload } from '@/components/Chat/Upload';
 import { CHAT_FILES_MAX_SIZE } from '@/utils/app/const';
+import { ClearMessages } from '@/components/Sidebar/ClearMessages';
+
 import { humanFileSize } from '@/utils/app/files';
 
 interface Props {
@@ -51,6 +52,7 @@ export const Chat: FC<Props> = memo(
     stopConversationRef,
   }) => {
     const { t } = useTranslation('chat');
+    console.log('conversation index fileNames', conversation);
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
     const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -76,12 +78,6 @@ export const Chat: FC<Props> = memo(
 
     const handleUploadError = (errorMsg: string) => {
       setErrorMsg(errorMsg);
-    };
-
-    const onClearAll = () => {
-      if (confirm(t<string>('Are you sure you want to clear all messages?'))) {
-        onUpdateConversation(conversation, { key: 'messages', value: [] });
-      }
     };
 
     const scrollDown = () => {
@@ -206,7 +202,7 @@ export const Chat: FC<Props> = memo(
                     </>
                   ) : undefined}
 
-                  <div className="mx-auto flex w-[350px] flex-col space-y-10 pt-12 sm:w-[600px]">
+                  <div className="mx-auto flex w-[350px] flex-col space-y-10 pt-24 sm:w-[600px]">
                     <div className="flex h-full flex-col space-y-4 rounded border border-neutral-200 p-4 dark:border-neutral-600">
                       <Upload
                         onIndexChange={(index) =>
@@ -280,14 +276,13 @@ export const Chat: FC<Props> = memo(
                 </>
               ) : (
                 <>
-                  <div className="flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-                    {t('File')}: {conversation.index.indexName}
-                    <IconClearAll
-                      className="ml-2 cursor-pointer hover:opacity-50"
-                      onClick={onClearAll}
-                      size={18}
+                  <div className="flex items-center justify-center border border-b-neutral-300 bg-neutral-100 py-3 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
+                    <ClearMessages
+                      onUpdateConversation={onUpdateConversation}
+                      conversation={conversation}
                     />
                   </div>
+
                   {showSettings && (
                     <div className="mx-auto flex w-[200px] flex-col space-y-10 pt-8 sm:w-[300px]">
                       <div className="flex h-full flex-col space-y-4 rounded border border-neutral-500 p-2">
@@ -339,6 +334,7 @@ export const Chat: FC<Props> = memo(
                   onSend(currentMessage, 2);
                 }
               }}
+              conversation={conversation}
             />
           </>
         )}

@@ -9,11 +9,8 @@ export const config = {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log('beginning handler');
-
   const message: string = req.query.message as string;
   const indexName: string = req.query.indexName as string;
-  console.log('indexName in query.ts: ', indexName);
   const indexType: string = req.query.indexType as string;
 
   console.log('handler chatfile query: ', message, indexName);

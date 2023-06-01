@@ -41,7 +41,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
     setConversations,
     selectedConversation,
     setSelectedConversation,
-    handleNewConversation,
     handleDeleteConversation,
     handleUpdateConversation,
   } = useConversations();
@@ -57,9 +56,8 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const [messageError, setMessageError] = useState<boolean>(false);
   const [modelError, setModelError] = useState<ErrorMessage | null>(null);
   const [currentMessage, setCurrentMessage] = useState<Message>();
-
   const stopConversationRef = useRef<boolean>(false);
-
+  console.log('conversations', conversations.length);
   const fetchChat = async (chatBody: ChatBody) => {
     const controller = new AbortController();
     const response = await fetch('/api/chat', {
@@ -106,7 +104,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       if (!selectedConversation) return;
 
       let updatedConversation = selectedConversation;
-      console.log(updatedConversation, 'updatedConversation');
 
       if (deleteCount) {
         updatedConversation.messages.splice(-deleteCount);
@@ -296,6 +293,37 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
     saveFolders(updatedFolders);
   };
 
+  const handleNewConversation = () => {
+    const lastConversation = conversations[conversations.length - 1];
+
+    const newConversation: Conversation = {
+      id: lastConversation ? lastConversation.id + 1 : 1,
+      name: `${t('Conversation')} ${
+        lastConversation ? lastConversation.id + 1 : 1
+      }`,
+      messages: [],
+      model: OpenAIModels[OpenAIModelID.GPT_3_5],
+      prompt: DEFAULT_SYSTEM_PROMPT,
+      folderId: 0,
+      fileNames: [],
+      index: {
+        indexName: '',
+        indexType: '',
+        fileNames: [],
+      },
+    };
+
+    const updatedConversations = [...conversations, newConversation];
+
+    setSelectedConversation(newConversation);
+    setConversations(updatedConversations);
+
+    saveConversation(newConversation);
+    saveConversations(updatedConversations);
+
+    setLoading(false);
+  };
+
   const handleClearConversations = () => {
     setConversations([]);
     localStorage.removeItem('conversationHistory');
@@ -307,9 +335,11 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       model: OpenAIModels[OpenAIModelID.GPT_3_5],
       prompt: DEFAULT_SYSTEM_PROMPT,
       folderId: 0,
+      fileNames: [],
       index: {
         indexName: '',
         indexType: '',
+        fileNames: [],
       },
     });
     localStorage.removeItem('selectedConversation');
@@ -413,9 +443,11 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: 0,
+        fileNames: [],
         index: {
           indexName: '',
           indexType: '',
+          fileNames: [],
         },
       });
     }
@@ -485,20 +517,26 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
               />
             )}
 
-            <Chat
-              conversation={selectedConversation}
-              messageIsStreaming={messageIsStreaming}
-              apiKey={apiKey}
-              serverSideApiKeyIsSet={serverSideApiKeyIsSet}
-              modelError={modelError}
-              messageError={messageError}
-              models={models}
-              loading={loading}
-              onSend={handleSend}
-              onUpdateConversation={handleUpdateConversation}
-              onEditMessage={handleEditMessage}
-              stopConversationRef={stopConversationRef}
-            />
+            {conversations.length > 0 ? (
+              <Chat
+                conversation={selectedConversation}
+                messageIsStreaming={messageIsStreaming}
+                apiKey={apiKey}
+                serverSideApiKeyIsSet={serverSideApiKeyIsSet}
+                modelError={modelError}
+                messageError={messageError}
+                models={models}
+                loading={loading}
+                onSend={handleSend}
+                onUpdateConversation={handleUpdateConversation}
+                onEditMessage={handleEditMessage}
+                stopConversationRef={stopConversationRef}
+              />
+            ) : (
+              <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-white p-4 text-center text-3xl font-bold leading-relaxed tracking-wide text-gray-800 dark:bg-[#343541] dark:text-gray-400 sm:p-10 sm:text-4xl">
+                Get started by creating a new chat in the sidebar
+              </div>
+            )}
           </div>
         </main>
       )}

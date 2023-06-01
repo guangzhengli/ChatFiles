@@ -50,6 +50,7 @@ export const Upload = ({
             onIndexChange({
               indexName: item.indexName,
               indexType: item.indexType,
+              fileNames: item.fileNames,
             });
             console.log('import file index json name:', item);
           });

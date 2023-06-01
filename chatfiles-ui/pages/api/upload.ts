@@ -14,8 +14,6 @@ export const config = {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    console.log('beginning handler');
-
     const fData = await new Promise<{ fields: any; files: any }>(
       (resolve, reject) => {
         const form = new IncomingForm({ multiples: true });
@@ -44,6 +42,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           uploadFile.originalFilename,
         );
       });
+
+      console.log('Formdata', formData);
 
       const response = await fetch(`${CHAT_FILES_SERVER_HOST}/upload`, {
         method: 'POST',

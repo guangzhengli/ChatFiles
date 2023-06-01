@@ -1,23 +1,19 @@
 from flask import Flask, request, make_response, jsonify
-
-from merge import merge_pdfs
+import uuid
 
 import argparse
 import os
 
-from chat import (
-    create_llama_index,
+from helpers import (
     get_answer_from_index,
-    check_llama_index_exists,
+    file_upload_path,
+    check_index_exists,
+    clean_file,
 )
 
-from file import (
-    get_single_file_upload_path,
-    get_index_name_from_single_file_path,
-    get_index_name_without_json_extension,
-    clean_file,
-    single_file_upload_path,
-    check_index_exists,
+from llama_index import (
+    GPTSimpleVectorIndex,
+    SimpleDirectoryReader,
 )
 
 app = Flask(__name__)
@@ -29,62 +25,48 @@ def upload_file():
         return "Please send a POST request with a file", 400
 
     filepaths = []
+    filenames = []
 
     for file in request.files.values():
         uploaded_file = file
         filename = uploaded_file.filename
-        filepath = os.path.join(
-            get_single_file_upload_path(), os.path.basename(filename)
-        )
+        filepath = os.path.join(file_upload_path, os.path.basename(filename))
         uploaded_file.save(filepath)
         filepaths.append(filepath)
+        filenames.append(filename)
 
-    print("filepathssssssssssssssssssssssssssssssss", filepaths)
+    documents = SimpleDirectoryReader(input_dir="./documents").load_data()
+    index = GPTSimpleVectorIndex.from_documents(documents)
+
+    json_filename = None
 
     if len(filepaths) == 1:
-        filepath = filepaths[0]
-        if check_llama_index_exists(filepath) is True:
-            return get_index_name_without_json_extension(
-                get_index_name_from_single_file_path(filepath)
-            )
-
-        index_name, index = create_llama_index(filepath)
-
-        clean_file(filepath)
-        return (
-            make_response(
-                {
-                    "indexName": get_index_name_without_json_extension(index_name),
-                    "indexType": "index",
-                }
-            ),
-            200,
-        )
+        json_filename = os.path.splitext(filenames[0])[0]
+        json_filepath = f"./documents/{json_filename}.json"
+        index.save_to_disk(json_filepath)
+        clean_file(filepaths[0])
 
     elif len(filepaths) > 1:
-        output_dir = "./documents"
-        output_filename = "merged.pdf"
-        merge_pdfs(filepaths, output_dir, output_filename)
-        output_path = os.path.join(output_dir, output_filename)
-
-        index_name, index = create_llama_index(output_path)
-
-        clean_file(output_path)
+        json_filename = f"{str(uuid.uuid4())}"
+        json_filepath = f"./documents/{json_filename}.json"
+        index.save_to_disk(json_filepath)
 
         for filepath in filepaths:
             clean_file(filepath)
-        return (
-            make_response(
-                {
-                    "indexName": get_index_name_without_json_extension(index_name),
-                    "indexType": "index",
-                }
-            ),
-            200,
-        )
 
     else:
         return "No files found in request", 400
+
+    return (
+        make_response(
+            {
+                "indexName": json_filename,
+                "indexType": "index",
+                "fileNames": filenames,
+            }
+        ),
+        200,
+    )
 
 
 @app.route("/query", methods=["GET"])
@@ -116,8 +98,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Chat Files")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode")
     args = parser.parse_args()
-    if not os.path.exists(single_file_upload_path):
-        os.makedirs(single_file_upload_path)
+    if not os.path.exists(file_upload_path):
+        os.makedirs(file_upload_path)
     if os.environ.get("CHAT_FILES_MAX_SIZE") is not None:
         app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("CHAT_FILES_MAX_SIZE"))
     app.run(port=5000, host="0.0.0.0", debug=args.debug)

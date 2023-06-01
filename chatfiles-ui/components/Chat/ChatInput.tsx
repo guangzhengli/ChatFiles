@@ -1,4 +1,4 @@
-import { Message, OpenAIModel, OpenAIModelID } from '@/types';
+import { Conversation, Message, OpenAIModel, OpenAIModelID } from '@/types';
 import { IconPlayerStop, IconRepeat, IconSend } from '@tabler/icons-react';
 import {
   FC,
@@ -17,6 +17,7 @@ interface Props {
   onRegenerate: () => void;
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
+  conversation: Conversation;
 }
 
 export const ChatInput: FC<Props> = ({
@@ -27,6 +28,7 @@ export const ChatInput: FC<Props> = ({
   onRegenerate,
   stopConversationRef,
   textareaRef,
+  conversation,
 }) => {
   const { t } = useTranslation('chat');
   const [content, setContent] = useState<string>();
@@ -92,7 +94,7 @@ export const ChatInput: FC<Props> = ({
         textareaRef?.current?.scrollHeight > 400 ? 'auto' : 'hidden'
       }`;
     }
-  }, [content]);
+  }, [content, textareaRef]);
 
   function handleStopConversation() {
     stopConversationRef.current = true;
@@ -116,7 +118,7 @@ export const ChatInput: FC<Props> = ({
 
         {!messageIsStreaming && !conversationIsEmpty && (
           <button
-            className="absolute -top-2 left-0 right-0 mx-auto w-fit rounded border border-neutral-200 bg-white py-2 px-4 text-black dark:border-neutral-600 dark:bg-[#343541] dark:text-white md:top-0"
+            className="absolute -top-2 left-0 right-0 mx-auto w-fit rounded border border-neutral-200 bg-white py-2 px-4 text-black dark:border-neutral-600 dark:bg-[#343541] dark:text-white dark:hover:text-gray-300 md:top-0"
             onClick={onRegenerate}
           >
             <IconRepeat size={16} className="mb-[2px] inline-block" />{' '}
@@ -156,17 +158,11 @@ export const ChatInput: FC<Props> = ({
         </div>
       </div>
       <div className="px-3 pt-2 pb-3 text-center text-[12px] text-black/50 dark:text-white/50 md:px-4 md:pt-3 md:pb-6">
-        <a
-            href="https://github.com/guangzhengli/ChatFiles"
-            target="_blank"
-            rel="noreferrer"
-            className="underline"
-        >
-          ChatFiles
-        </a>
-        {' '}
-        {t(
-            "aims to establish embeddings for ChatGPT and facilitate its ability to engage in document-based conversations.",
+        <span className="mr-1">{t('File(s)')}:</span>
+        {Array.isArray(conversation.index.fileNames) ? (
+          <span>{conversation.index.fileNames.join(', ')}</span>
+        ) : (
+          <span>{conversation.index.fileNames}</span>
         )}
       </div>
     </div>

@@ -1,12 +1,12 @@
 import os
 from pathlib import Path
 
-single_file_upload_path = "./documents"
-single_file_upload_path_dir = Path(single_file_upload_path)
+file_upload_path = "./documents"
+file_upload_dir = Path(file_upload_path)
 
 
 def get_index_name_from_single_file_path(file_name):
-    file_with_type = str(Path(file_name).relative_to(single_file_upload_path_dir).name)
+    file_with_type = str(Path(file_name).relative_to(file_upload_dir).name)
     file_index_name = file_with_type.split(".")[0].replace(" ", "")
     return file_index_name
 
@@ -22,14 +22,14 @@ def get_name_with_json_extension(index_name):
 
 
 def get_single_file_upload_filepath(index_name):
-    return single_file_upload_path_dir / index_name
-
-
-def get_single_file_upload_path():
-    return single_file_upload_path
+    return file_upload_dir / index_name
 
 
 def check_index_file_exists(index_name):
+    print(
+        get_single_file_upload_filepath(index_name).is_file(),
+        "inside of check-index file exists\n",
+    )
     return get_single_file_upload_filepath(index_name).is_file()
 
 

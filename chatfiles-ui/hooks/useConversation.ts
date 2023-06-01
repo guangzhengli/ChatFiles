@@ -20,36 +20,6 @@ const useConversations = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation>();
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleNewConversation = () => {
-    const lastConversation = conversations[conversations.length - 1];
-
-    const newConversation: Conversation = {
-      id: lastConversation ? lastConversation.id + 1 : 1,
-      name: `${t('Conversation')} ${
-        lastConversation ? lastConversation.id + 1 : 1
-      }`,
-      messages: [],
-      model: OpenAIModels[OpenAIModelID.GPT_3_5],
-      prompt: DEFAULT_SYSTEM_PROMPT,
-      folderId: 0,
-      index: {
-        indexName: '',
-        indexType: '',
-      },
-    };
-
-    const updatedConversations = [...conversations, newConversation];
-
-    setSelectedConversation(newConversation);
-    setConversations(updatedConversations);
-
-    saveConversation(newConversation);
-    saveConversations(updatedConversations);
-
-    setLoading(false);
-  };
 
   const handleDeleteConversation = (conversation: Conversation) => {
     const updatedConversations = conversations.filter(
@@ -71,6 +41,7 @@ const useConversations = () => {
         model: OpenAIModels[OpenAIModelID.GPT_3_5],
         prompt: DEFAULT_SYSTEM_PROMPT,
         folderId: 0,
+        filepaths: [],
         index: {
           indexName: '',
           indexType: '',
@@ -103,7 +74,6 @@ const useConversations = () => {
     setConversations,
     selectedConversation,
     setSelectedConversation,
-    handleNewConversation,
     handleDeleteConversation,
     handleUpdateConversation,
   };

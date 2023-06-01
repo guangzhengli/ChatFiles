@@ -38,6 +38,7 @@ export interface Conversation {
   model: OpenAIModel;
   prompt: string;
   folderId: number;
+  fileNames: string[];
   index: LlamaIndex;
 }
 
@@ -62,4 +63,5 @@ export interface ErrorMessage {
 export interface LlamaIndex {
   indexName: string;
   indexType: string;
+  fileNames: string[];
 }
