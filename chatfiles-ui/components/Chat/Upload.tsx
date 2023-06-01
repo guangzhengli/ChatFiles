@@ -3,6 +3,7 @@ import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
 import {humanFileSize} from "@/utils/app/files";
 import {useTranslation} from 'next-i18next';
 import {v4 as uuidv4} from 'uuid';
+import {EmbeddingCreateRequest} from "@/types/embedding";
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
@@ -24,9 +25,7 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         handleIsUploading(true);
 
         try {
-            const fileTempName = `${uuidv4()}.${file.name.split('.').pop()}`;
-
-            await uploadFile(file, fileTempName);
+            await uploadFile(file);
 
             handleIsUploading(false);
             handleIsUploadSuccess(true)
@@ -49,18 +48,44 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
         return true;
     };
 
-    const uploadFile = async (file: File, fileTempName: string) => {
+    const uploadFile = async (file: File) => {
+        const fileName = uuidv4();
+        const fileType = file.name.split('.').pop()!;
+
         const formData = new FormData();
         formData.append("file", file);
 
-        await fetch(`/api/files?fileName=${fileTempName}`, {
+        await fetch(`/api/files?fileName=${fileName}.${fileType}`, {
             method: 'POST',
             body: formData
-        }).then(res => res.json())
-            .then((data: any) => {
-                // onIndexChange({indexName: data.indexName, indexType: data.indexType});
-                console.log("import file index json name:", data);
-            });
+        }).then(res => {
+            if (!res.ok) {
+                console.log("save file failed:", fileName);
+                throw new Error(`save file failed:, ${fileName}`);
+            }
+        }).then(async (data: any) => {
+            console.log("save file success:", fileName);
+            await saveEmbeddings(fileName, fileType);
+            onIndexChange({indexName: fileName, indexType: fileType.split('.').pop()!});
+        });
+    }
+
+    const saveEmbeddings = async (fileName: string, fileType: string) => {
+        await fetch('/api/embedding', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                fileName: fileName,
+                fileType: fileType,
+            })
+        }).then(res => {
+            if (!res.ok) {
+                console.log("save embedding failed:");
+                throw new Error("save embedding failed`");
+            }
+        });
     }
 
     const deleteFile = async (fileTempName: string) => {
