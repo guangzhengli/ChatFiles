@@ -26,10 +26,6 @@ def get_single_file_upload_filepath(index_name):
 
 
 def check_index_file_exists(index_name):
-    print(
-        get_single_file_upload_filepath(index_name).is_file(),
-        "inside of check-index file exists\n",
-    )
     return get_single_file_upload_filepath(index_name).is_file()
 
 

@@ -3,13 +3,14 @@ import uuid
 
 import argparse
 import os
+from pathlib import Path
 
-from helpers import (
-    get_answer_from_index,
-    file_upload_path,
-    check_index_exists,
-    clean_file,
-)
+# from helpers import (
+#     get_answer_from_index,
+#     clean_file,
+# )
+
+from single import create_index, get_answer_from_index, clean_file
 
 from llama_index import (
     GPTSimpleVectorIndex,
@@ -17,6 +18,8 @@ from llama_index import (
 )
 
 app = Flask(__name__)
+
+file_upload_path = "./documents"
 
 
 @app.route("/upload", methods=["POST"])
@@ -77,7 +80,9 @@ def query_from_llama_index():
         print("\nindex name is ", index_name)
         index_type = request.args.get("indexType")
         print("\nindex type is ", index_type)
-        if check_index_exists(index_name) is False:
+        index_file_path = Path(file_upload_path) / f"{index_name}.json"
+
+        if not os.path.isfile(index_file_path):
             return "Index file does not exist", 404
 
         if index_type == "index":

@@ -39,13 +39,6 @@ def create_index(filepath, index_name):
     return index
 
 
-def create_index():
-    documents = SimpleDirectoryReader(input_dir="./documents").load_data()
-    index = GPTSimpleVectorIndex.from_documents(documents)
-    index.save_to_disk("./documents/test.json")
-    return index
-
-
 def get_index_by_index_name(index_name):
     index_name = get_name_with_json_extension(index_name)
     if check_index_file_exists(index_name) is False:
@@ -68,10 +61,6 @@ def get_index_name_from_single_file_path(file_name):
     return file_index_name
 
 
-def get_index_name_without_json_extension(index_name):
-    return index_name.replace(".json", "")
-
-
 def get_name_with_json_extension(index_name):
     if index_name is None:
         raise ValueError("index_name cannot be None")
@@ -83,10 +72,6 @@ def get_single_file_upload_filepath(index_name):
 
 
 def check_index_file_exists(index_name):
-    print(
-        get_single_file_upload_filepath(index_name).is_file(),
-        "inside of check-index file exists\n",
-    )
     return get_single_file_upload_filepath(index_name).is_file()
 
 
