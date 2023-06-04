@@ -2,8 +2,9 @@ import {PDFLoader} from "langchain/document_loaders/fs/pdf";
 import {EPubLoader} from "langchain/document_loaders/fs/epub";
 import {DocxLoader} from "langchain/document_loaders/fs/docx";
 import {TextLoader} from "langchain/document_loaders/fs/text";
-import {DocumentLoader} from "langchain/document_loaders";
 import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
+import {DocumentLoader} from "langchain/dist/document_loaders/base";
+import { UnstructuredLoader } from "langchain/document_loaders/fs/unstructured";
 
 export function getDocumentLoader(fileType: string, filePath: string): DocumentLoader {
     let loader;
@@ -28,7 +29,8 @@ export function getDocumentLoader(fileType: string, filePath: string): DocumentL
             loader = new TextLoader(filePath);
             return loader;
         default:
-            throw new Error("GetDocumentLoader failure, Unsupported file type");
+            loader = new UnstructuredLoader(filePath);
+            return loader;
     }
 }
 

@@ -21,8 +21,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     splitDocuments.map((doc) => {
         doc.metadata = { fileName: fileName };
     });
-    await saveEmbeddings(splitDocuments);
-    return fileName;
+    try {
+        await saveEmbeddings(splitDocuments);
+        res.status(200).json({ message: 'save supabase embedding successes' });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ message: (e as Error).message });
+    }
 }
 
 export default handler;

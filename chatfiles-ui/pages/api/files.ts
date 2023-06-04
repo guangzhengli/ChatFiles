@@ -44,6 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 console.log('File deleted successfully');
             });
         } else {
+            res.status(404).json({ message: 'File Not Found' });
             console.log('File does not exist');
         }
     }

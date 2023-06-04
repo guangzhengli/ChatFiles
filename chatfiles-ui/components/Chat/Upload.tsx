@@ -29,7 +29,6 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
 
             handleIsUploading(false);
             handleIsUploadSuccess(true)
-
         } catch (e) {
             console.error(e);
             handleUploadError((e as Error).message);
@@ -85,6 +84,7 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
                 console.log("save embedding failed:");
                 throw new Error("save embedding failed`");
             }
+
         });
     }
 
@@ -114,7 +114,7 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
                 </div>
                 <input id="dropzone-file" type="file" className="hidden" onChange={(e) => {
                     if (e.target.files && e.target.files[0]) {
-                        handleFile(e.target.files[0]);
+                        handleFile(e.target.files[0]).then(r => console.log("upload file success and save embedding success"));
                     }
                 }}/>
             </label>

@@ -1,4 +1,4 @@
-import {SupabaseVectorStore} from "langchain/vectorstores";
+import {SupabaseVectorStore} from "langchain/vectorstores/supabase";
 import {createClient} from "@supabase/supabase-js";
 import {Document} from "langchain/dist/document";
 import {SUPABASE_KEY, SUPABASE_URL} from "@/utils/app/const";
