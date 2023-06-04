@@ -1,5 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {getVectorStore} from "@/utils/vector";
+import {getExistingVectorStore} from "@/utils/vector";
+import {getModel} from "@/utils/openai";
+import {loadQAStuffChain} from "langchain/chains";
 
 export const config = {
     api: {
@@ -14,10 +16,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const indexName: string = req.query.indexName as string;
 
     console.log("handler chatfile query: ", message, indexName);
-    const vectorStore = await getVectorStore([message], {fileName: indexName});
+    const vectorStore = await getExistingVectorStore(indexName);
 
-    const result = await vectorStore.similaritySearch(message, 1);
-    console.log(result);
+    const documents = await vectorStore.similaritySearch(message);
+    const model = await getModel();
+    const stuffChain = loadQAStuffChain(model);
+
+    try {
+        const chainValues = await stuffChain.call({
+            input_documents: documents,
+            question: message,
+        });
+        res.status(200).json({ responseMessage: chainValues.text.toString() });
+    } catch (e) {
+        console.log("error in handler: ", e);
+        res.status(500).json({ responseMessage: (e as Error).toString() });
+    }
+
 }
 
 export default handler;

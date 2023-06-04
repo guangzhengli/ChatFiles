@@ -16,6 +16,17 @@ export const getVectorStore = async (texts: string[], metadata: object) => {
     );
 }
 
+export const getExistingVectorStore = async (fileName: string) => {
+    return await SupabaseVectorStore.fromExistingIndex(await getEmbeddings(),
+        {
+            client,
+            tableName: "documents",
+            queryName: "match_documents",
+            // filter: {fileName: fileName}
+        }
+    );
+}
+
 export const saveEmbeddings = async (documents: Document[]) => {
     const supabaseVectorStore = new SupabaseVectorStore(await getEmbeddings(),
         {client, tableName: "documents", queryName: "match_documents"});

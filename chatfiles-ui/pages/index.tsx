@@ -30,6 +30,9 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
+import { loadQAStuffChain } from "langchain/chains";
+import { OpenAI } from "langchain/llms/openai";
+import {getModel} from "@/utils/openai";
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
@@ -184,15 +187,15 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       } else {
         // send to chat file server
         const response = await fetch(
-            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}&indexType=${updatedConversation.index.indexType}`, {
+            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}}`, {
           method: 'GET'
         });
 
-        const answer = await response.json() as string;
+        const { responseMessage } = await response.json();
 
         const updatedMessages: Message[] = [
           ...updatedConversation.messages,
-          { role: 'assistant', content: answer },
+          { role: 'assistant', content: responseMessage },
         ];
 
         updatedConversation = {
