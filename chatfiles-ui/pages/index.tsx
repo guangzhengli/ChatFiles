@@ -187,7 +187,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       } else {
         // send to chat file server
         const response = await fetch(
-            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}}`, {
+            `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}`, {
           method: 'GET'
         });
 
