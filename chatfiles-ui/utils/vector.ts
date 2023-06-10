@@ -1,4 +1,4 @@
-import {SupabaseVectorStore} from "langchain/vectorstores/supabase";
+import {SupabaseFilterRPCCall, SupabaseVectorStore} from "langchain/vectorstores/supabase";
 import {createClient} from "@supabase/supabase-js";
 import {Document} from "langchain/dist/document";
 import {SUPABASE_KEY, SUPABASE_URL} from "@/utils/app/const";
@@ -17,12 +17,14 @@ export const getVectorStore = async (texts: string[], metadata: object) => {
 }
 
 export const getExistingVectorStore = async (fileName: string) => {
+    const fileNameFilter: SupabaseFilterRPCCall = (rpc) =>
+        rpc.filter("metadata->>file_name", "eq", fileName);
     return await SupabaseVectorStore.fromExistingIndex(await getEmbeddings(),
         {
             client,
             tableName: "documents",
             queryName: "match_documents",
-            // filter: {fileName: fileName}
+            filter: fileNameFilter
         }
     );
 }
@@ -30,5 +32,9 @@ export const getExistingVectorStore = async (fileName: string) => {
 export const saveEmbeddings = async (documents: Document[]) => {
     const supabaseVectorStore = new SupabaseVectorStore(await getEmbeddings(),
         {client, tableName: "documents", queryName: "match_documents"});
-    await supabaseVectorStore.addDocuments(documents);
+
+    // wait for https://github.com/hwchase17/langchainjs/pull/1598 to be released
+    for (const doc of documents) {
+        await supabaseVectorStore.addDocuments([doc]);
+    }
 }

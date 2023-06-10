@@ -1,8 +1,10 @@
 export const DEFAULT_SYSTEM_PROMPT =
-  "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.";
+    "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.";
 
 export const CHAT_FILES_MAX_SIZE =
     parseInt(process.env.NEXT_PUBLIC_CHAT_FILES_MAX_SIZE || '') || 0;
+
+export const NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH = process.env.NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH;
 
 export const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 // if (!SUPABASE_KEY) throw new Error(`Expected SUPABASE_SERVICE_ROLE_KEY`)

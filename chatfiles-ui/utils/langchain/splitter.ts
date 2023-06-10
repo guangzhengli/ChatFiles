@@ -1,8 +1,8 @@
-import {RecursiveCharacterTextSplitter} from "langchain/text_splitter";
+import {CharacterTextSplitter} from "langchain/text_splitter";
 import {Document} from "langchain/dist/document";
 
 export function getSplitterDocument(documents: Document[]): Promise<Document[]> {
-    const splitter = new RecursiveCharacterTextSplitter({
+    const splitter = new CharacterTextSplitter({
         chunkSize: 4000,
         chunkOverlap: 200,
     });

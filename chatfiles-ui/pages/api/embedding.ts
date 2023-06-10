@@ -1,16 +1,10 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {getDocumentLoader} from "@/utils/langchain/documentLoader";
-import {EmbeddingCreateRequest} from "@/types/embedding";
 import {getSplitterDocument} from "@/utils/langchain/splitter";
 import {saveEmbeddings} from "@/utils/vector";
+import {NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH} from "@/utils/app/const";
 
-// export const config = {
-//     api: {
-//         bodyParser: false,
-//     }
-// };
-
-const folderPath = 'public/uploads';
+const folderPath = NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log("beginning embedding handler");
@@ -19,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const document = await loader.load();
     const splitDocuments = await getSplitterDocument(document);
     splitDocuments.map((doc) => {
-        doc.metadata = { fileName: fileName };
+        doc.metadata = { file_name : fileName };
     });
     try {
         await saveEmbeddings(splitDocuments);

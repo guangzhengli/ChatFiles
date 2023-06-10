@@ -1,6 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import multer from "multer";
 import fs from 'fs';
+import {NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH} from "@/utils/app/const";
 
 export const config = {
     api: {
@@ -8,7 +9,7 @@ export const config = {
     }
 };
 
-const folderPath = 'public/uploads';
+const folderPath = NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH!;
 
 const upload = multer({
     storage: multer.diskStorage({
