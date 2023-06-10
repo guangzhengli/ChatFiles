@@ -1,7 +1,7 @@
 import {SupabaseFilterRPCCall, SupabaseVectorStore} from "langchain/vectorstores/supabase";
 import {createClient} from "@supabase/supabase-js";
 import {Document} from "langchain/dist/document";
-import {SUPABASE_KEY, SUPABASE_URL} from "@/utils/app/const";
+import {OPENAI_TYPE, SUPABASE_KEY, SUPABASE_URL} from "@/utils/app/const";
 import {getEmbeddings} from "@/utils/embeddings";
 
 
@@ -34,7 +34,12 @@ export const saveEmbeddings = async (documents: Document[]) => {
         {client, tableName: "documents", queryName: "match_documents"});
 
     // wait for https://github.com/hwchase17/langchainjs/pull/1598 to be released
-    for (const doc of documents) {
-        await supabaseVectorStore.addDocuments([doc]);
+    if (OPENAI_TYPE === "Azure") {
+        for (const doc of documents) {
+            await supabaseVectorStore.addDocuments([doc]);
+        }
+    } else {
+        await supabaseVectorStore.addDocuments(documents);
     }
+
 }

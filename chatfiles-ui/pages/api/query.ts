@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log("handler chatfile query: ", message, indexName);
     const vectorStore = await getExistingVectorStore(indexName);
 
-    const documents = await vectorStore.similaritySearch(message);
+    const documents = await vectorStore.similaritySearch(message, 2);
     const model = await getModel();
     const stuffChain = loadQAStuffChain(model);
 
