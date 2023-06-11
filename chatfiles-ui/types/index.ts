@@ -8,6 +8,11 @@ export enum OpenAIModelID {
   GPT_4 = 'gpt-4',
 }
 
+export enum ModelType {
+  OPENAI = 'openai',
+  AZURE_OPENAI = 'azure',
+}
+
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
   [OpenAIModelID.GPT_3_5]: {
     id: OpenAIModelID.GPT_3_5,
@@ -62,4 +67,14 @@ export interface ErrorMessage {
 export interface LlamaIndex {
   indexName: string;
   indexType: string;
+}
+
+export interface KeyConfiguration {
+  apiType: ModelType;
+  apiKey: string;
+  azureApiKey: string;
+  azureInstanceName: string;
+  azureApiVersion: string;
+  azureDeploymentName: string;
+  azureEmbeddingDeploymentName: string;
 }

@@ -1,0 +1,141 @@
+import { FC, MouseEventHandler, useState } from 'react';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card"
+import { KeyConfiguration, ModelType } from '@/types';
+
+interface Props {
+    onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+}
+
+export const KeySettings: FC<Props> = ({
+    onKeyConfigrationChange,
+}) => {
+    const [fromkeyConfigration, setFromKeyConfigration] = useState<KeyConfiguration>({
+        apiType: ModelType.OPENAI,
+        apiKey: '',
+        azureApiKey: '',
+        azureInstanceName: '',
+        azureApiVersion: '',
+        azureDeploymentName: '',
+        azureEmbeddingDeploymentName: '',
+    })
+
+    const handleOpenAISubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setFromKeyConfigration({
+            ...fromkeyConfigration,
+            apiType: ModelType.OPENAI,
+        });
+        onKeyConfigrationChange(fromkeyConfigration);
+    };
+
+    const handleAzureOpenAISubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setFromKeyConfigration({
+            ...fromkeyConfigration,
+            apiType: ModelType.AZURE_OPENAI,
+        });
+        onKeyConfigrationChange(fromkeyConfigration);
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFromKeyConfigration({
+          ...fromkeyConfigration,
+          [event.target.name]: event.target.value,
+        });
+    };
+
+    return (
+        <>
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button className="w-64" variant="outline">OpenAI API Key Settings</Button>
+                </SheetTrigger>
+                <SheetContent position="left" size="sm">
+                    <SheetHeader>
+                    <SheetTitle>OpenAI Key Configuration</SheetTitle>
+                    </SheetHeader>
+                    <Tabs defaultValue="openai" className="w-full mt-4">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="openai">OpenAI</TabsTrigger>
+                            <TabsTrigger value="azure openai">Azure OpenAI</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="openai">
+                            <Card>
+                            <CardHeader>
+                                <CardTitle>OpenAI</CardTitle>
+                                <CardDescription className='pt-4'>
+                                Make changes to your OpenAI Key here. Click save when you're done.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <div className="space-y-1">
+                                <Label htmlFor="name">Key</Label>
+                                <Input id="name" placeholder="sk-xxx" name="apiKey" value={fromkeyConfigration.apiKey} onChange={handleChange}/>
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Button className="mx-auto mt-4 w-64" type="submit" onClick={handleOpenAISubmit}>Save</Button>
+                            </CardFooter>
+                            </Card>
+                        </TabsContent>
+                        <TabsContent value="azure openai">
+                            <Card>
+                            <CardHeader>
+                                <CardTitle>Azure OpenAI</CardTitle>
+                                <CardDescription className='pt-4'>
+                                Make changes to your Auzre OpenAI Configuration here. Click save when you're done.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-2">
+                                <div className="space-y-1">
+                                <Label htmlFor="current">API Key</Label>
+                                <Input id="current" type="password" placeholder='***' name="azureApiKey" value={fromkeyConfigration.azureApiKey} onChange={handleChange}/>
+                                </div>
+                                <div className="space-y-1">
+                                <Label htmlFor="name">Instance Name</Label>
+                                <Input id="name" placeholder="name" name="azureInstanceName" value={fromkeyConfigration.azureInstanceName} onChange={handleChange}/>
+                                </div>
+                                <div className="space-y-1">
+                                <Label htmlFor="name">API Version</Label>
+                                <Input id="name" defaultValue="2023-05-15" name="azureApiVersion" value={fromkeyConfigration.azureApiVersion} onChange={handleChange}/>
+                                </div>
+                                <div className="space-y-1">
+                                <Label htmlFor="name">Deployment Model Name</Label>
+                                <Input id="name" placeholder="gpt-35-turbo" name="azureDeploymentName" value={fromkeyConfigration.azureDeploymentName} onChange={handleChange}/>
+                                </div>
+                                <div className="space-y-1">
+                                <Label htmlFor="name">Embeddings Deployment Model Name</Label>
+                                <Input id="name" placeholder="text-embedding-ada-002" name="azureEmbeddingDeploymentName" value={fromkeyConfigration.azureEmbeddingDeploymentName} onChange={handleChange}/>
+                                </div>
+                            </CardContent>
+                            <CardFooter>
+                                <Button className="mx-auto mt-4 w-64" type="submit" onClick={handleAzureOpenAISubmit}>Save</Button>
+                            </CardFooter>
+                            </Card>
+                        </TabsContent>
+                    </Tabs>
+                </SheetContent>
+            </Sheet>
+        </>
+
+    )
+}

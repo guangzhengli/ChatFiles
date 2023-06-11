@@ -1,11 +1,11 @@
-import { ChatFolder, Conversation } from '@/types';
+import { ChatFolder, Conversation, KeyConfiguration, ModelType } from '@/types';
 import { IconFileExport, IconMoon, IconSun } from '@tabler/icons-react';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { ClearConversations } from './ClearConversations';
 import { Import } from './Import';
-import { Key } from './Key';
 import { SidebarButton } from './SidebarButton';
+import { KeySettings } from './KeySettings';
 
 interface Props {
   lightMode: 'light' | 'dark';
@@ -18,6 +18,7 @@ interface Props {
     conversations: Conversation[];
     folders: ChatFolder[];
   }) => void;
+  onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
 }
 
 export const SidebarSettings: FC<Props> = ({
@@ -28,8 +29,10 @@ export const SidebarSettings: FC<Props> = ({
   onClearConversations,
   onExportConversations,
   onImportConversations,
+  onKeyConfigrationChange,
 }) => {
   const { t } = useTranslation('sidebar');
+
   return (
     <div className="flex flex-col items-center space-y-1 border-t border-white/20 pt-1 text-sm">
       <ClearConversations onClearConversations={onClearConversations} />
@@ -51,8 +54,8 @@ export const SidebarSettings: FC<Props> = ({
           onToggleLightMode(lightMode === 'light' ? 'dark' : 'light')
         }
       />
-
-      <Key apiKey={apiKey} onApiKeyChange={onApiKeyChange} />
+      <KeySettings onKeyConfigrationChange={onKeyConfigrationChange}/>
     </div>
   );
 };
+

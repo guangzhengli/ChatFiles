@@ -1,4 +1,4 @@
-import { ChatFolder, Conversation, KeyValuePair } from '@/types';
+import { ChatFolder, Conversation, KeyConfiguration, KeyValuePair } from '@/types';
 import {
   IconArrowBarLeft,
   IconFolderPlus,
@@ -38,6 +38,7 @@ interface Props {
     conversations: Conversation[];
     folders: ChatFolder[];
   }) => void;
+  onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
 }
 
 export const Sidebar: FC<Props> = ({
@@ -60,6 +61,7 @@ export const Sidebar: FC<Props> = ({
   onClearConversations,
   onExportConversations,
   onImportConversations,
+  onKeyConfigrationChange
 }) => {
   const { t } = useTranslation('sidebar');
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -207,6 +209,7 @@ export const Sidebar: FC<Props> = ({
         onClearConversations={onClearConversations}
         onExportConversations={onExportConversations}
         onImportConversations={onImportConversations}
+        onKeyConfigrationChange={onKeyConfigrationChange}
       />
     </aside>
   );

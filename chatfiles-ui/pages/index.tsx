@@ -6,6 +6,7 @@ import {
   ChatFolder,
   Conversation,
   ErrorMessage,
+  KeyConfiguration,
   KeyValuePair,
   Message,
   OpenAIModel,
@@ -53,6 +54,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const [messageError, setMessageError] = useState<boolean>(false);
   const [modelError, setModelError] = useState<ErrorMessage | null>(null);
   const [currentMessage, setCurrentMessage] = useState<Message>();
+  const [keyConfiguration, setkeyConfiguration] = useState<KeyConfiguration>();
 
   const stopConversationRef = useRef<boolean>(false);
 
@@ -292,6 +294,11 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
     exportData();
   };
 
+  const handleKeyConfigrationChange = (keySettings: KeyConfiguration) => {
+    setkeyConfiguration(keySettings);
+    localStorage.setItem('keyConfiguation', JSON.stringify(keySettings));
+  };
+
   const handleImportConversations = (data: {
     conversations: Conversation[];
     folders: ChatFolder[];
@@ -514,6 +521,11 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       fetchModels('');
     }
 
+    const keyConfiguation = localStorage.getItem('keyConfiguation');
+    if (keyConfiguation) {
+      setkeyConfiguration(JSON.parse(keyConfiguation));
+    }
+
     if (window.innerWidth < 640) {
       setShowSidebar(false);
     }
@@ -599,6 +611,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
                   onClearConversations={handleClearConversations}
                   onExportConversations={handleExportData}
                   onImportConversations={handleImportConversations}
+                  onKeyConfigrationChange={handleKeyConfigrationChange}
                 />
 
                 <div
