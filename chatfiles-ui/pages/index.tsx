@@ -9,6 +9,7 @@ import {
   KeyConfiguration,
   KeyValuePair,
   Message,
+  ModelType,
   OpenAIModel,
   OpenAIModelID,
   OpenAIModels,
@@ -54,7 +55,15 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const [messageError, setMessageError] = useState<boolean>(false);
   const [modelError, setModelError] = useState<ErrorMessage | null>(null);
   const [currentMessage, setCurrentMessage] = useState<Message>();
-  const [keyConfiguration, setkeyConfiguration] = useState<KeyConfiguration>();
+  const [keyConfiguration, setkeyConfiguration] = useState<KeyConfiguration>({
+    apiType: ModelType.OPENAI,
+    apiKey: '',
+    azureApiKey: '',
+    azureInstanceName: '',
+    azureApiVersion: '',
+    azureDeploymentName: '',
+    azureEmbeddingDeploymentName: '',
+  });
 
   const stopConversationRef = useRef<boolean>(false);
 
@@ -611,6 +620,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
                   onClearConversations={handleClearConversations}
                   onExportConversations={handleExportData}
                   onImportConversations={handleImportConversations}
+                  keyConfiguration={keyConfiguration}
                   onKeyConfigrationChange={handleKeyConfigrationChange}
                 />
 

@@ -24,23 +24,25 @@ import {
 import { KeyConfiguration, ModelType } from '@/types';
 
 interface Props {
+    keyConfiguration: KeyConfiguration;
     onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
 }
 
 export const KeySettings: FC<Props> = ({
+    keyConfiguration,
     onKeyConfigrationChange,
 }) => {
     const [fromkeyConfigration, setFromKeyConfigration] = useState<KeyConfiguration>({
-        apiType: ModelType.OPENAI,
-        apiKey: '',
-        azureApiKey: '',
-        azureInstanceName: '',
-        azureApiVersion: '',
-        azureDeploymentName: '',
-        azureEmbeddingDeploymentName: '',
+        apiType: keyConfiguration.apiType,
+        apiKey: keyConfiguration.apiKey,
+        azureApiKey: keyConfiguration.azureApiKey,
+        azureInstanceName: keyConfiguration.azureInstanceName,
+        azureApiVersion: keyConfiguration.azureApiVersion,
+        azureDeploymentName: keyConfiguration.azureDeploymentName,
+        azureEmbeddingDeploymentName: keyConfiguration.azureEmbeddingDeploymentName,
     })
 
-    const handleOpenAISubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleOpenAISubmit = () => {
         setFromKeyConfigration({
             ...fromkeyConfigration,
             apiType: ModelType.OPENAI,
@@ -48,7 +50,7 @@ export const KeySettings: FC<Props> = ({
         onKeyConfigrationChange(fromkeyConfigration);
     };
 
-    const handleAzureOpenAISubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleAzureOpenAISubmit = () => {
         setFromKeyConfigration({
             ...fromkeyConfigration,
             apiType: ModelType.AZURE_OPENAI,
@@ -89,7 +91,7 @@ export const KeySettings: FC<Props> = ({
                             <CardContent className="space-y-2">
                                 <div className="space-y-1">
                                 <Label htmlFor="name">Key</Label>
-                                <Input id="name" placeholder="sk-xxx" name="apiKey" value={fromkeyConfigration.apiKey} onChange={handleChange}/>
+                                <Input id="openaieky" type="password" placeholder="sk-xxx" name="apiKey" value={fromkeyConfigration.apiKey} onChange={handleChange}/>
                                 </div>
                             </CardContent>
                             <CardFooter>

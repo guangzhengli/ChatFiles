@@ -18,6 +18,7 @@ interface Props {
     conversations: Conversation[];
     folders: ChatFolder[];
   }) => void;
+  keyConfiguration: KeyConfiguration;
   onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
 }
 
@@ -29,6 +30,7 @@ export const SidebarSettings: FC<Props> = ({
   onClearConversations,
   onExportConversations,
   onImportConversations,
+  keyConfiguration,
   onKeyConfigrationChange,
 }) => {
   const { t } = useTranslation('sidebar');
@@ -54,7 +56,7 @@ export const SidebarSettings: FC<Props> = ({
           onToggleLightMode(lightMode === 'light' ? 'dark' : 'light')
         }
       />
-      <KeySettings onKeyConfigrationChange={onKeyConfigrationChange}/>
+      <KeySettings keyConfiguration={keyConfiguration} onKeyConfigrationChange={onKeyConfigrationChange}/>
     </div>
   );
 };
