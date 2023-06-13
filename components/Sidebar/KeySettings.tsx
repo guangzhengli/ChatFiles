@@ -46,13 +46,11 @@ export const KeySettings: FC<Props> = ({
 
     const handleOpenAISubmit = () => {
         fromkeyConfigration.apiType = ModelType.OPENAI;
-        console.log(`click the handleOpenAISubmit:`, fromkeyConfigration)
         onKeyConfigrationChange(fromkeyConfigration);
     };
 
     const handleAzureOpenAISubmit = () => {
         fromkeyConfigration.apiType = ModelType.AZURE_OPENAI;
-        console.log(`click the handleAzureOpenAISubmit:`, fromkeyConfigration)
         onKeyConfigrationChange(fromkeyConfigration);
     };
 
