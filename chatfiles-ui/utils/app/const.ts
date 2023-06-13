@@ -12,14 +12,14 @@ export const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 export const SUPABASE_URL = process.env.SUPABASE_URL
 // if (!SUPABASE_URL) throw new Error(`Expected env var SUPABASE_URL`)
 
-export const OPENAI_TYPE = process.env.OPENAI_TYPE || 'OpenAI'; // Or Azure
+export const OPENAI_TYPE = process.env.OPENAI_TYPE; // Or OPENAI || AZURE_OPENAI
 
 export const OPENAI_API_HOST =
     process.env.OPENAI_API_HOST || 'https://api.openai.com';
 
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-export const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY!;
+export const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
 
 export const AZURE_OPENAI_API_INSTANCE_NAME = process.env.AZURE_OPENAI_API_INSTANCE_NAME;
 

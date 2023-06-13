@@ -43,18 +43,14 @@ export const KeySettings: FC<Props> = ({
     })
 
     const handleOpenAISubmit = () => {
-        setFromKeyConfigration({
-            ...fromkeyConfigration,
-            apiType: ModelType.OPENAI,
-        });
+        fromkeyConfigration.apiType = ModelType.OPENAI;
+        console.log(`click the handleOpenAISubmit:`, fromkeyConfigration)
         onKeyConfigrationChange(fromkeyConfigration);
     };
 
     const handleAzureOpenAISubmit = () => {
-        setFromKeyConfigration({
-            ...fromkeyConfigration,
-            apiType: ModelType.AZURE_OPENAI,
-        });
+        fromkeyConfigration.apiType = ModelType.AZURE_OPENAI;
+        console.log(`click the handleAzureOpenAISubmit:`, fromkeyConfigration)
         onKeyConfigrationChange(fromkeyConfigration);
     };
 
@@ -69,7 +65,7 @@ export const KeySettings: FC<Props> = ({
         <>
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button className="w-64" variant="outline">OpenAI API Key Settings</Button>
+                    <Button className="w-64 dark:border-gray-50" variant="outline">OpenAI API Key Settings</Button>
                 </SheetTrigger>
                 <SheetContent position="left" size="sm">
                     <SheetHeader>
@@ -85,7 +81,7 @@ export const KeySettings: FC<Props> = ({
                             <CardHeader>
                                 <CardTitle>OpenAI</CardTitle>
                                 <CardDescription className='pt-4'>
-                                Make changes to your OpenAI Key here. Click save when you're done.
+                                Make changes to your OpenAI Key here. Click save when you are done.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
@@ -104,7 +100,7 @@ export const KeySettings: FC<Props> = ({
                             <CardHeader>
                                 <CardTitle>Azure OpenAI</CardTitle>
                                 <CardDescription className='pt-4'>
-                                Make changes to your Auzre OpenAI Configuration here. Click save when you're done.
+                                Make changes to your Auzre OpenAI Configuration here. Click save when you are done.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">

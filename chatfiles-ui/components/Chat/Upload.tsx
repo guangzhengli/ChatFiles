@@ -1,4 +1,4 @@
-import {LlamaIndex} from "@/types";
+import {KeyConfiguration, LlamaIndex} from "@/types";
 import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
 import {humanFileSize} from "@/utils/app/files";
 import {useTranslation} from 'next-i18next';
@@ -7,12 +7,19 @@ import {EmbeddingCreateRequest} from "@/types/embedding";
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
+    keyConfiguration: KeyConfiguration;
     handleIsUploading: (isUploading: boolean) => void;
     handleIsUploadSuccess: (isUploadSuccess: boolean) => void;
     handleUploadError: (error: string) => void;
 }
 
-export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess, handleUploadError}: Props) => {
+export const Upload = ({
+    onIndexChange, 
+    keyConfiguration,
+    handleIsUploading, 
+    handleIsUploadSuccess, 
+    handleUploadError
+}: Props) => {
 
     const { t } = useTranslation('sidebar');
 
@@ -74,6 +81,13 @@ export const Upload = ({onIndexChange, handleIsUploading, handleIsUploadSuccess,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'x-api-type': keyConfiguration.apiType ?? '',
+                'x-api-key': keyConfiguration.apiKey ?? '',
+                'x-azure-api-key': keyConfiguration.azureApiKey ?? '',
+                'x-azure-instance-name': keyConfiguration.azureInstanceName ?? '',
+                'x-azure-api-version': keyConfiguration.azureApiVersion ?? '',
+                'x-azure-deployment-name': keyConfiguration.azureDeploymentName ?? '',
+                'x-azure-embedding-deployment-name': keyConfiguration.azureEmbeddingDeploymentName ?? '',
             },
             body: JSON.stringify({
                 fileName: fileName,

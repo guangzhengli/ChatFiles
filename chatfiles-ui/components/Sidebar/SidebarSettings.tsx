@@ -9,9 +9,7 @@ import { KeySettings } from './KeySettings';
 
 interface Props {
   lightMode: 'light' | 'dark';
-  apiKey: string;
   onToggleLightMode: (mode: 'light' | 'dark') => void;
-  onApiKeyChange: (apiKey: string) => void;
   onClearConversations: () => void;
   onExportConversations: () => void;
   onImportConversations: (data: {
@@ -24,9 +22,7 @@ interface Props {
 
 export const SidebarSettings: FC<Props> = ({
   lightMode,
-  apiKey,
   onToggleLightMode,
-  onApiKeyChange,
   onClearConversations,
   onExportConversations,
   onImportConversations,

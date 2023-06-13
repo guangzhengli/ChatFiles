@@ -1,28 +1,17 @@
-import {OpenAIEmbeddings} from "langchain/embeddings/openai";
-import {
-    AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
-    AZURE_OPENAI_API_INSTANCE_NAME,
-    AZURE_OPENAI_API_KEY,
-    AZURE_OPENAI_API_VERSION,
-    OPENAI_API_KEY,
-    OPENAI_TYPE
-} from "@/utils/app/const";
+import { KeyConfiguration, ModelType } from "@/types";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 
-const azureOpenAIEmbeddings = new OpenAIEmbeddings({
-    azureOpenAIApiKey: AZURE_OPENAI_API_KEY,
-    azureOpenAIApiInstanceName: AZURE_OPENAI_API_INSTANCE_NAME,
-    azureOpenAIApiDeploymentName: AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
-    azureOpenAIApiVersion: AZURE_OPENAI_API_VERSION,
-});
-
-const embeddings = new OpenAIEmbeddings({
-    openAIApiKey: OPENAI_API_KEY,
-});
-
-export const getEmbeddings = async () => {
-    if (OPENAI_TYPE === 'Azure') {
-        return azureOpenAIEmbeddings;
+export const getEmbeddings = async (keyConfiguration: KeyConfiguration) => {
+    if (keyConfiguration.apiType === ModelType.AZURE_OPENAI) {
+        return new OpenAIEmbeddings({
+            azureOpenAIApiKey: keyConfiguration.azureApiKey,
+            azureOpenAIApiInstanceName: keyConfiguration.azureInstanceName,
+            azureOpenAIApiDeploymentName: keyConfiguration.azureEmbeddingDeploymentName,
+            azureOpenAIApiVersion: keyConfiguration.azureApiVersion,
+        });
     } else {
-        return embeddings;
+        return new OpenAIEmbeddings({
+            openAIApiKey: keyConfiguration.apiKey,
+        });
     }
 }

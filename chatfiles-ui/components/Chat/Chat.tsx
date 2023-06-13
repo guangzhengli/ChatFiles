@@ -1,4 +1,4 @@
-import {Conversation, ErrorMessage, KeyValuePair, Message, OpenAIModel,} from '@/types';
+import {Conversation, ErrorMessage, KeyConfiguration, KeyValuePair, Message, OpenAIModel,} from '@/types';
 import {throttle} from '@/utils';
 import {IconClearAll, IconSettings} from '@tabler/icons-react';
 import {useTranslation} from 'next-i18next';
@@ -15,8 +15,7 @@ import {humanFileSize} from "@/utils/app/files";
 interface Props {
   conversation: Conversation;
   models: OpenAIModel[];
-  apiKey: string;
-  serverSideApiKeyIsSet: boolean;
+  keyConfiguration: KeyConfiguration;
   messageIsStreaming: boolean;
   modelError: ErrorMessage | null;
   messageError: boolean;
@@ -34,8 +33,7 @@ export const Chat: FC<Props> = memo(
   ({
     conversation,
     models,
-    apiKey,
-    serverSideApiKeyIsSet,
+    keyConfiguration,
     messageIsStreaming,
     modelError,
     loading,
@@ -118,29 +116,7 @@ export const Chat: FC<Props> = memo(
 
     return (
       <div className="overflow-none relative flex-1 bg-white dark:bg-[#343541]">
-        {!(apiKey || serverSideApiKeyIsSet) ? (
-          <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[500px]">
-            <div className="text-center text-2xl font-semibold text-gray-800 dark:text-gray-100">
-              {t('OpenAI API Key Required')}
-            </div>
-            <div className="text-center text-gray-500 dark:text-gray-400">
-              {t(
-                'Please set your OpenAI API key in the bottom left of the sidebar.',
-              )}
-            </div>
-            <div className="text-center text-gray-500 dark:text-gray-400">
-              {t("If you don't have an OpenAI API key, you can get one here: ")}
-              <a
-                href="https://platform.openai.com/account/api-keys"
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-500 hover:underline"
-              >
-                openai.com
-              </a>
-            </div>
-          </div>
-        ) : modelError ? (
+        { modelError ? (
           <ErrorMessageDiv error={modelError} />
         ) : (
           <>
@@ -172,6 +148,7 @@ export const Chat: FC<Props> = memo(
                           onUpdateConversation(conversation, {
                             key: 'index',
                             value: index,})}
+                          keyConfiguration={keyConfiguration}
                           handleIsUploading={handleIsUploading}
                           handleIsUploadSuccess={handleIsUploadSuccess}
                           handleUploadError={handleUploadError}

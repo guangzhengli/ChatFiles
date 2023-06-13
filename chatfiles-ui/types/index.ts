@@ -9,8 +9,8 @@ export enum OpenAIModelID {
 }
 
 export enum ModelType {
-  OPENAI = 'openai',
-  AZURE_OPENAI = 'azure',
+  OPENAI = 'OPENAI',
+  AZURE_OPENAI = 'AZURE_OPENAI',
 }
 
 export const OpenAIModels: Record<OpenAIModelID, OpenAIModel> = {
@@ -70,11 +70,11 @@ export interface LlamaIndex {
 }
 
 export interface KeyConfiguration {
-  apiType: ModelType;
-  apiKey: string;
-  azureApiKey: string;
-  azureInstanceName: string;
-  azureApiVersion: string;
-  azureDeploymentName: string;
-  azureEmbeddingDeploymentName: string;
+  apiType?: ModelType;
+  apiKey?: string;
+  azureApiKey?: string;
+  azureInstanceName?: string;
+  azureApiVersion?: string;
+  azureDeploymentName?: string;
+  azureEmbeddingDeploymentName?: string;
 }

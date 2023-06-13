@@ -17,7 +17,6 @@ interface Props {
   conversations: Conversation[];
   lightMode: 'light' | 'dark';
   selectedConversation: Conversation;
-  apiKey: string;
   folders: ChatFolder[];
   onCreateFolder: (name: string) => void;
   onDeleteFolder: (folderId: number) => void;
@@ -31,7 +30,6 @@ interface Props {
     conversation: Conversation,
     data: KeyValuePair,
   ) => void;
-  onApiKeyChange: (apiKey: string) => void;
   onClearConversations: () => void;
   onExportConversations: () => void;
   onImportConversations: (data: {
@@ -47,7 +45,6 @@ export const Sidebar: FC<Props> = ({
   conversations,
   lightMode,
   selectedConversation,
-  apiKey,
   folders,
   onCreateFolder,
   onDeleteFolder,
@@ -58,7 +55,6 @@ export const Sidebar: FC<Props> = ({
   onDeleteConversation,
   onToggleSidebar,
   onUpdateConversation,
-  onApiKeyChange,
   onClearConversations,
   onExportConversations,
   onImportConversations,
@@ -205,9 +201,7 @@ export const Sidebar: FC<Props> = ({
 
       <SidebarSettings
         lightMode={lightMode}
-        apiKey={apiKey}
         onToggleLightMode={onToggleLightMode}
-        onApiKeyChange={onApiKeyChange}
         onClearConversations={onClearConversations}
         onExportConversations={onExportConversations}
         onImportConversations={onImportConversations}

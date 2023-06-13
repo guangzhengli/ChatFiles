@@ -26,15 +26,12 @@ import {
 } from '@/utils/app/conversation';
 import { saveFolders } from '@/utils/app/folders';
 import { exportData, importData } from '@/utils/app/importExport';
-import { IconArrowBarLeft, IconArrowBarRight } from '@tabler/icons-react';
+import { IconArrowBarRight } from '@tabler/icons-react';
 import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'next-i18next';
-import { loadQAStuffChain } from "langchain/chains";
-import { OpenAI } from "langchain/llms/openai";
-import {getModel} from "@/utils/openai";
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
@@ -51,7 +48,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const [lightMode, setLightMode] = useState<'dark' | 'light'>('dark');
   const [messageIsStreaming, setMessageIsStreaming] = useState<boolean>(false);
   const [showSidebar, setShowSidebar] = useState<boolean>(true);
-  const [apiKey, setApiKey] = useState<string>('');
   const [messageError, setMessageError] = useState<boolean>(false);
   const [modelError, setModelError] = useState<ErrorMessage | null>(null);
   const [currentMessage, setCurrentMessage] = useState<Message>();
@@ -98,7 +94,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         const chatBody: ChatBody = {
           model: updatedConversation.model,
           messages: updatedConversation.messages,
-          key: apiKey,
+          key: keyConfiguration.apiKey!,
           prompt: updatedConversation.prompt,
         };
 
@@ -199,7 +195,16 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
         // send to chat file server
         const response = await fetch(
             `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}`, {
-          method: 'GET'
+          method: 'GET',
+          headers: {
+            'x-api-type': keyConfiguration.apiType ?? '',
+            'x-api-key': keyConfiguration.apiKey ?? '',
+            'x-azure-api-key': keyConfiguration.azureApiKey ?? '',
+            'x-azure-instance-name': keyConfiguration.azureInstanceName ?? '',
+            'x-azure-api-version': keyConfiguration.azureApiVersion ?? '',
+            'x-azure-deployment-name': keyConfiguration.azureDeploymentName ?? '',
+            'x-azure-embedding-deployment-name': keyConfiguration.azureEmbeddingDeploymentName ?? '',
+        },
         });
 
         const { responseMessage } = await response.json();
@@ -292,11 +297,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   const handleLightMode = (mode: 'dark' | 'light') => {
     setLightMode(mode);
     localStorage.setItem('theme', mode);
-  };
-
-  const handleApiKeyChange = (apiKey: string) => {
-    setApiKey(apiKey);
-    localStorage.setItem('apiKey', apiKey);
   };
 
   const handleExportData = () => {
@@ -511,23 +511,9 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   }, [selectedConversation]);
 
   useEffect(() => {
-    if (apiKey) {
-      fetchModels(apiKey);
-    }
-  }, [apiKey]);
-
-  useEffect(() => {
     const theme = localStorage.getItem('theme');
     if (theme) {
       setLightMode(theme as 'dark' | 'light');
-    }
-
-    const apiKey = localStorage.getItem('apiKey');
-    if (apiKey) {
-      setApiKey(apiKey);
-      fetchModels(apiKey);
-    } else if (serverSideApiKeyIsSet) {
-      fetchModels('');
     }
 
     const keyConfiguation = localStorage.getItem('keyConfiguation');
@@ -597,6 +583,10 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
             />
           </div>
 
+          {/* (!serverSideApiKeyIsSet) ? (
+            <KeySettings keyConfiguration={keyConfiguration} onKeyConfigrationChange={handleKeyConfigrationChange} />
+          ) */}
+
           <div className="flex h-full w-full pt-[48px] sm:pt-0">
             {showSidebar ? (
               <div>
@@ -605,7 +595,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
                   conversations={conversations}
                   lightMode={lightMode}
                   selectedConversation={selectedConversation}
-                  apiKey={apiKey}
                   folders={folders}
                   onToggleLightMode={handleLightMode}
                   onCreateFolder={handleCreateFolder}
@@ -616,7 +605,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
                   onDeleteConversation={handleDeleteConversation}
                   onToggleSidebar={() => setShowSidebar(!showSidebar)}
                   onUpdateConversation={handleUpdateConversation}
-                  onApiKeyChange={handleApiKeyChange}
                   onClearConversations={handleClearConversations}
                   onExportConversations={handleExportData}
                   onImportConversations={handleImportConversations}
@@ -639,8 +627,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
             <Chat
               conversation={selectedConversation}
               messageIsStreaming={messageIsStreaming}
-              apiKey={apiKey}
-              serverSideApiKeyIsSet={serverSideApiKeyIsSet}
+              keyConfiguration={keyConfiguration}
               modelError={modelError}
               messageError={messageError}
               models={models}
@@ -661,7 +648,7 @@ export default Home;
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
-      serverSideApiKeyIsSet: !!process.env.OPENAI_API_KEY,
+      serverSideApiKeyIsSet: !!process.env.OPENAI_TYPE,
       ...(await serverSideTranslations(locale ?? 'en', [
         'common',
         'chat',
