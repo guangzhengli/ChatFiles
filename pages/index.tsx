@@ -517,12 +517,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   }, [selectedConversation]);
 
   useEffect(() => {
-    if (!serverSideApiKeyIsSet) {
-      handlekeyConfigurationButtonClick();
-    }
-  });
-
-  useEffect(() => {
     const theme = localStorage.getItem('theme');
     if (theme) {
       setLightMode(theme as 'dark' | 'light');
@@ -575,6 +569,12 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
       });
     }
   }, [serverSideApiKeyIsSet]);
+
+  useEffect(() => {
+    if (!serverSideApiKeyIsSet && !keyConfiguration.apiKey && !keyConfiguration.azureApiKey) {
+      handlekeyConfigurationButtonClick();
+    }
+  });
 
   return (
     <>
