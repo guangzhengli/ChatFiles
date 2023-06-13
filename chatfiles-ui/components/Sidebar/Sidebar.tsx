@@ -38,6 +38,7 @@ interface Props {
   }) => void;
   keyConfiguration: KeyConfiguration;
   onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+  keyConfigurationButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 export const Sidebar: FC<Props> = ({
@@ -59,7 +60,8 @@ export const Sidebar: FC<Props> = ({
   onExportConversations,
   onImportConversations,
   keyConfiguration,
-  onKeyConfigrationChange
+  onKeyConfigrationChange,
+  keyConfigurationButtonRef,
 }) => {
   const { t } = useTranslation('sidebar');
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -207,6 +209,7 @@ export const Sidebar: FC<Props> = ({
         onImportConversations={onImportConversations}
         keyConfiguration={keyConfiguration}
         onKeyConfigrationChange={onKeyConfigrationChange}
+        keyConfigurationButtonRef={keyConfigurationButtonRef}
       />
     </aside>
   );

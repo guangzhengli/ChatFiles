@@ -18,6 +18,7 @@ interface Props {
   }) => void;
   keyConfiguration: KeyConfiguration;
   onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+  keyConfigurationButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 export const SidebarSettings: FC<Props> = ({
@@ -28,6 +29,7 @@ export const SidebarSettings: FC<Props> = ({
   onImportConversations,
   keyConfiguration,
   onKeyConfigrationChange,
+  keyConfigurationButtonRef,
 }) => {
   const { t } = useTranslation('sidebar');
 
@@ -52,7 +54,7 @@ export const SidebarSettings: FC<Props> = ({
           onToggleLightMode(lightMode === 'light' ? 'dark' : 'light')
         }
       />
-      <KeySettings keyConfiguration={keyConfiguration} onKeyConfigrationChange={onKeyConfigrationChange}/>
+      <KeySettings keyConfiguration={keyConfiguration} onKeyConfigrationChange={onKeyConfigrationChange} keyConfigurationButtonRef={keyConfigurationButtonRef}/>
     </div>
   );
 };

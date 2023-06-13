@@ -26,11 +26,13 @@ import { KeyConfiguration, ModelType } from '@/types';
 interface Props {
     keyConfiguration: KeyConfiguration;
     onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+    keyConfigurationButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 export const KeySettings: FC<Props> = ({
     keyConfiguration,
     onKeyConfigrationChange,
+    keyConfigurationButtonRef,
 }) => {
     const [fromkeyConfigration, setFromKeyConfigration] = useState<KeyConfiguration>({
         apiType: keyConfiguration.apiType,
@@ -65,7 +67,7 @@ export const KeySettings: FC<Props> = ({
         <>
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button className="w-64 dark:border-gray-50" variant="outline">OpenAI API Key Settings</Button>
+                    <Button ref={keyConfigurationButtonRef} className="w-64 dark:border-gray-50" variant="outline">OpenAI API Key Settings</Button>
                 </SheetTrigger>
                 <SheetContent position="left" size="sm">
                     <SheetHeader>

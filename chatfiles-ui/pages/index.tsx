@@ -60,8 +60,14 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
     azureDeploymentName: '',
     azureEmbeddingDeploymentName: '',
   });
-
   const stopConversationRef = useRef<boolean>(false);
+
+  const keyConfigurationButtonRef = useRef<HTMLButtonElement>(null);
+  const handlekeyConfigurationButtonClick = () => {
+    if (keyConfigurationButtonRef.current) {
+      keyConfigurationButtonRef.current.click();
+    }
+  };
 
   const handleSend = async (message: Message, deleteCount = 0) => {
     if (selectedConversation) {
@@ -511,6 +517,12 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
   }, [selectedConversation]);
 
   useEffect(() => {
+    if (!serverSideApiKeyIsSet) {
+      handlekeyConfigurationButtonClick();
+    }
+  });
+
+  useEffect(() => {
     const theme = localStorage.getItem('theme');
     if (theme) {
       setLightMode(theme as 'dark' | 'light');
@@ -583,10 +595,6 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
             />
           </div>
 
-          {/* (!serverSideApiKeyIsSet) ? (
-            <KeySettings keyConfiguration={keyConfiguration} onKeyConfigrationChange={handleKeyConfigrationChange} />
-          ) */}
-
           <div className="flex h-full w-full pt-[48px] sm:pt-0">
             {showSidebar ? (
               <div>
@@ -610,6 +618,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
                   onImportConversations={handleImportConversations}
                   keyConfiguration={keyConfiguration}
                   onKeyConfigrationChange={handleKeyConfigrationChange}
+                  keyConfigurationButtonRef={keyConfigurationButtonRef}
                 />
 
                 <div
