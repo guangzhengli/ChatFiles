@@ -1,13 +1,9 @@
 [![My Skills](https://skillicons.dev/icons?i=nextjs,tailwind,react,python,flask)](https://skillicons.dev)<a href="https://www.buymeacoffee.com/iguangzhengli" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
-> ⚠️⚠️⚠️警告：由于我的 Openai key 额度已用完，并且我无法充值，网页 demo 暂时无法服务。如果有需要，请自行在本地运行。感谢。
-
 # ChatFiles
 **上传文件然后与之对话.**
 
 ## 如何使用
-
-浏览器打开：https://chatfiles-ui.fly.dev 。
 上传文件对话，可以看看这些好的例子: [Good Example](./doc/Example.md)
 
 ### 如何无限制的本地运行
@@ -30,27 +26,12 @@ docker compose up
 直接发送消息，而无需上传文件。
 
 ## 如何本地运行
-### chatfiles-ui
+### chatfiles
 
 ```shell
-cd chatfiles-ui
 npm install
 npm run dev
 ```
-
-### chatfiles
-```shell
-cd chatfiles
-```
-
-创建一个名为 .env的文件，里面设置值为(OPENAI_API_KEY=your token)
-
-```shell
-python3 server.py
-```
-
-## 如何部署到 fly.io
-- [Deploy to fly.io](./doc/deploy-flyio.md)
 
 ## 功能
 
