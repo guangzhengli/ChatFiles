@@ -1,6 +1,7 @@
 import { KeyConfiguration, ModelType } from "@/types";
 import { OpenAIChat } from "langchain/llms/openai";
 import {CallbackManager} from "langchain/callbacks";
+import {NextApiResponse} from "next";
 
 export const getModel = async (keyConfiguration: KeyConfiguration) => {
     if (keyConfiguration.apiType === ModelType.AZURE_OPENAI) {
@@ -19,7 +20,7 @@ export const getModel = async (keyConfiguration: KeyConfiguration) => {
     }
 }
 
-export const getChatModel = async (keyConfiguration: KeyConfiguration, encoder: TextEncoder, writer: WritableStreamDefaultWriter) => {
+export const getChatModel = async (keyConfiguration: KeyConfiguration, res: NextApiResponse) => {
     if (keyConfiguration.apiType === ModelType.AZURE_OPENAI) {
         return new OpenAIChat({
             temperature: 0.9,
@@ -30,16 +31,10 @@ export const getChatModel = async (keyConfiguration: KeyConfiguration, encoder: 
             azureOpenAIApiVersion: keyConfiguration.azureApiVersion,
             callbacks: CallbackManager.fromHandlers({
                 handleLLMNewToken: async (token: string, runId: string, parentRunId?: string) =>{
-                    await writer.ready;
-                    await writer.write(encoder.encode(token));
+                    res.write(token);
                 },
                 handleLLMEnd: async () => {
-                    await writer.ready;
-                    await writer.close();
-                },
-                handleLLMError: async (e) => {
-                    await writer.ready;
-                    await writer.abort(e);
+                    res.end();
                 },
             })
         });
@@ -50,16 +45,10 @@ export const getChatModel = async (keyConfiguration: KeyConfiguration, encoder: 
             openAIApiKey: keyConfiguration.apiKey,
             callbacks: CallbackManager.fromHandlers({
                 handleLLMNewToken: async (token: string, runId: string, parentRunId?: string) =>{
-                    await writer.ready;
-                    await writer.write(encoder.encode(token));
+                    res.write(token);
                 },
                 handleLLMEnd: async () => {
-                    await writer.ready;
-                    await writer.close();
-                },
-                handleLLMError: async (e) => {
-                    await writer.ready;
-                    await writer.abort(e);
+                    res.end();
                 },
             })
         });

@@ -13,7 +13,7 @@ import {
   SystemMessagePromptTemplate
 } from "langchain/prompts";
 import {BufferMemory, ChatMessageHistory} from "langchain/memory";
-import {ConversationChain} from "langchain/chains";
+import {ConversationChain, LLMChain} from "langchain/chains";
 
 export const config = {
   // runtime: 'edge',
@@ -42,14 +42,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   try {
-    const stream = callChain(input, prompt, historyMessages, keyConfiguration);
-    return new Response(await stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        Connection: "keep-alive",
-        "Cache-Control": "no-cache, no-transform",
-      },
+    const llm = await getChatModel(keyConfiguration, res);
+
+    const promptTemplate = ChatPromptTemplate.fromPromptMessages([
+      // SystemMessagePromptTemplate.fromTemplate(prompt ? prompt : DEFAULT_SYSTEM_PROMPT),
+      // new MessagesPlaceholder("history"),
+      HumanMessagePromptTemplate.fromTemplate("{input}"),
+    ]);
+
+    const memory = new BufferMemory({
+      returnMessages: true,
+      chatHistory: new ChatMessageHistory(historyMessages),
     });
+
+    const chain = new LLMChain({
+      prompt: promptTemplate,
+      llm,
+      memory,
+    });
+
+    chain.call({ input }).catch(console.error);
   } catch (err) {
     console.error(err);
     let error = "Unexpected message";
@@ -65,32 +77,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const callChain = async (input: string, prompt: string, historyMessages: BaseChatMessage[], keyConfiguration: KeyConfiguration) => {
-  const encoder = new TextEncoder();
-  const stream = new TransformStream();
-  const writer = stream.writable.getWriter();
-
-  const llm = await getChatModel(keyConfiguration, encoder, writer);
-
-  const promptTemplate = ChatPromptTemplate.fromPromptMessages([
-    SystemMessagePromptTemplate.fromTemplate(prompt ? prompt : DEFAULT_SYSTEM_PROMPT),
-    new MessagesPlaceholder("history"),
-    HumanMessagePromptTemplate.fromTemplate("{input}"),
-  ]);
-
-  const memory = new BufferMemory({
-    returnMessages: true,
-    chatHistory: new ChatMessageHistory(historyMessages),
-  });
-
-  const chain = new ConversationChain({
-    prompt: promptTemplate,
-    llm,
-    memory,
-  });
-
-  chain.call({ input }).catch(console.error);
-  return stream.readable;
-}
 
 export default handler;
