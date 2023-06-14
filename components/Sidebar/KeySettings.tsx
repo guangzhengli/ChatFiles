@@ -81,7 +81,7 @@ export const KeySettings: FC<Props> = ({
                             <CardHeader>
                                 <CardTitle>OpenAI</CardTitle>
                                 <CardDescription className='pt-4'>
-                                Make changes to your OpenAI Key here. Click save when you are done.
+                                Make changes to your OpenAI Key here. Click save when you are done. We will not store your API Key.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
@@ -102,7 +102,7 @@ export const KeySettings: FC<Props> = ({
                             <CardHeader>
                                 <CardTitle>Azure OpenAI</CardTitle>
                                 <CardDescription className='pt-4'>
-                                Make changes to your Auzre OpenAI Configuration here. Click save when you are done.
+                                Make changes to your Auzre OpenAI Configuration here. Click save when you are done. We will not store your API Key.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
