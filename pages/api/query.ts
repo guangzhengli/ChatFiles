@@ -21,15 +21,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const vectorStore = await getExistingVectorStore(keyConfiguration, indexName);
 
     const documents = await vectorStore.similaritySearch(message, 2);
-    const model = await getModel(keyConfiguration);
-    const stuffChain = loadQAStuffChain(model);
+    const llm = await getModel(keyConfiguration, res);
+    const stuffChain = loadQAStuffChain(llm);
 
     try {
-        const chainValues = await stuffChain.call({
+        stuffChain.call({
             input_documents: documents,
             question: message,
-        });
-        res.status(200).json({ responseMessage: chainValues.text.toString() });
+        }).catch(console.error);
+        // res.status(200).json({ responseMessage: chainValues.text.toString() });
     } catch (e) {
         console.log("error in handler: ", e);
         res.status(500).json({ responseMessage: (e as Error).toString() });
