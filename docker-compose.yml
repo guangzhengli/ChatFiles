@@ -4,17 +4,16 @@ services:
     image: guangzhengli/chatfiles:latest
     container_name: chatfiles
     ports:
-      - 5000:5000
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-  chatfiles-ui:
-    image: guangzhengli/chatfiles-ui:latest
-    container_name: chatfiles-ui
-    ports:
       - 3000:3000
     environment:
+      - OPENAI_TYPE=${OPENAI_TYPE}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - CHAT_FILES_SERVER_HOST=http://chatfiles:5000
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_API_DEPLOYMENT_NAME=${AZURE_OPENAI_API_DEPLOYMENT_NAME}
+      - AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=${AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME}
+      - AZURE_OPENAI_API_INSTANCE_NAME=${AZURE_OPENAI_API_INSTANCE_NAME}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH=public/uploads
       - NEXT_PUBLIC_CHAT_FILES_MAX_SIZE=0
-    depends_on:
-      - chatfiles
