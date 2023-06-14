@@ -47,9 +47,7 @@ export interface Conversation {
 }
 
 export interface ChatBody {
-  model: OpenAIModel;
   messages: Message[];
-  key: string;
   prompt: string;
 }
 

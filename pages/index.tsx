@@ -97,22 +97,28 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
 
 
       if (updatedConversation.index.indexName.length === 0) {
-        const chatBody: ChatBody = {
-          model: updatedConversation.model,
-          messages: updatedConversation.messages,
-          key: keyConfiguration.apiKey!,
-          prompt: updatedConversation.prompt,
-        };
 
         const controller = new AbortController();
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-type': keyConfiguration.apiType ?? '',
+            'x-api-key': keyConfiguration.apiKey ?? '',
+            'x-azure-api-key': keyConfiguration.azureApiKey ?? '',
+            'x-azure-instance-name': keyConfiguration.azureInstanceName ?? '',
+            'x-azure-api-version': keyConfiguration.azureApiVersion ?? '',
+            'x-azure-deployment-name': keyConfiguration.azureDeploymentName ?? '',
+            'x-azure-embedding-deployment-name': keyConfiguration.azureEmbeddingDeploymentName ?? '',
           },
           signal: controller.signal,
-          body: JSON.stringify(chatBody),
+          body: JSON.stringify({
+            messages: updatedConversation.messages,
+            prompt: updatedConversation.prompt,
+          }),
         });
+
+        console.log("handle response")
 
         if (!response.ok) {
           setLoading(false);
@@ -121,15 +127,21 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
           return;
         }
 
-        const data = response.body;
-
-        if (!data) {
-          setLoading(false);
-          setMessageIsStreaming(false);
-          setMessageError(true);
-
-          return;
+        if (!response?.body) {
+            setLoading(false);
+            setMessageIsStreaming(false);
+            setMessageError(true);
+            return;
         }
+
+        // const data = response.body;
+
+        // if (!data) {
+        //   setLoading(false);
+        //   setMessageIsStreaming(false);
+        //   setMessageError(true);
+        //   return;
+        // }
 
         if (updatedConversation.messages.length === 1) {
           const { content } = message;
@@ -144,7 +156,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
 
         setLoading(false);
 
-        const reader = data.getReader();
+        const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let done = false;
         let isFirst = true;
@@ -159,6 +171,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
           const { value, done: doneReading } = await reader.read();
           done = doneReading;
           const chunkValue = decoder.decode(value);
+          console.log("response value", chunkValue)
 
           text += chunkValue;
 
@@ -197,6 +210,7 @@ const Home: React.FC<HomeProps> = ({ serverSideApiKeyIsSet }) => {
             setSelectedConversation(updatedConversation);
           }
         }
+        await reader.cancel();
       } else {
         // send to chat file server
         const response = await fetch(
