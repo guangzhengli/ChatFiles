@@ -245,52 +245,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
         }
     };
 
-    const fetchModels = async (key: string) => {
-        const error = {
-            title: t('Error fetching models.'),
-            code: null,
-            messageLines: [
-                t(
-                    'Make sure your OpenAI API key is set in the bottom left of the sidebar.',
-                ),
-                t('If you completed this step, OpenAI may be experiencing issues.'),
-            ],
-        } as ErrorMessage;
-
-        const response = await fetch('/api/models', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                key,
-            }),
-        });
-
-        if (!response.ok) {
-            try {
-                const data = await response.json();
-                Object.assign(error, {
-                    code: data.error?.code,
-                    messageLines: [data.error?.message],
-                });
-            } catch (e) {
-            }
-            setModelError(error);
-            return;
-        }
-
-        const data = await response.json();
-
-        if (!data) {
-            setModelError(error);
-            return;
-        }
-
-        setModels(data);
-        setModelError(null);
-    };
-
     const handleLightMode = (mode: 'dark' | 'light') => {
         setLightMode(mode);
         localStorage.setItem('theme', mode);
