@@ -91,7 +91,9 @@ export const KeySettings: FC<Props> = ({
                                 </div>
                             </CardContent>
                             <CardFooter>
-                                <Button className="mx-auto mt-4 w-64" type="submit" onClick={handleOpenAISubmit}>Save</Button>
+                                <SheetClose asChild>
+                                    <Button className="mx-auto mt-4 w-64" type="submit" onClick={handleOpenAISubmit}>Save</Button>
+                                </SheetClose>
                             </CardFooter>
                             </Card>
                         </TabsContent>
@@ -126,7 +128,9 @@ export const KeySettings: FC<Props> = ({
                                 </div>
                             </CardContent>
                             <CardFooter>
-                                <Button className="mx-auto mt-4 w-64" type="submit" onClick={handleAzureOpenAISubmit}>Save</Button>
+                                <SheetClose asChild>
+                                    <Button className="mx-auto mt-4 w-64" type="submit" onClick={handleAzureOpenAISubmit}>Save</Button>
+                                </SheetClose>
                             </CardFooter>
                             </Card>
                         </TabsContent>
