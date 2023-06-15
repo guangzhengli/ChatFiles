@@ -5,7 +5,7 @@ COPY package*.json ./
 
 # ---- Dependencies ----
 FROM base AS dependencies
-RUN npm config
+RUN npm ci
 
 # ---- Build ----
 FROM dependencies AS build
