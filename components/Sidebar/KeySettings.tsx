@@ -116,7 +116,7 @@ export const KeySettings: FC<Props> = ({
                                 </div>
                                 <div className="space-y-1">
                                 <Label htmlFor="name">API Version</Label>
-                                <Input id="name" defaultValue="2023-05-15" name="azureApiVersion" value={fromkeyConfigration.azureApiVersion} onChange={handleChange}/>
+                                <Input id="name" placeholder="2023-05-15" name="azureApiVersion" value={fromkeyConfigration.azureApiVersion} onChange={handleChange}/>
                                 </div>
                                 <div className="space-y-1">
                                 <Label htmlFor="name">Deployment Model Name</Label>
