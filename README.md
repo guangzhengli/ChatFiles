@@ -27,13 +27,6 @@ EN | [中文文档](README.zh.md)
 
 open browser with http://localhost:3000
 
-### chat with file
-1. upload a file.
-2. have a conversation with it.
-
-### chat with GPT
-1. send message without upload file.
-
 ## How to run locally
 ### chatfiles-ui
 
