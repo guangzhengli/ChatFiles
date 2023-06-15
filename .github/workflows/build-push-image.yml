@@ -1,6 +1,9 @@
 name: ci
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - 'main'
 
 jobs:
   docker:
@@ -26,16 +29,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64
-          context: ./chatfiles/
+          context: .
           push: true
           tags: guangzhengli/chatfiles:latest
-          file: ./chatfiles/Dockerfile
-      -
-        name: Build and push chatfiles-ui image
-        uses: docker/build-push-action@v4
-        with:
-          platforms: linux/amd64,linux/arm64
-          context: ./chatfiles-ui/
-          push: true
-          tags: guangzhengli/chatfiles-ui:latest
-          file: ./chatfiles-ui/Dockerfile
