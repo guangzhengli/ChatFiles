@@ -12,6 +12,11 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      - 
+        name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
