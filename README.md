@@ -20,6 +20,9 @@ EN | [中文文档](README.zh.md)
 
 ## How to use it
 
+### Init Vector DB
+[Crate a vector db on Supabase](doc/vectordb/supabase.md)
+
 ### How to run locally without limited
 1. clone this repository.
 2. create a .env file on root path.
@@ -34,6 +37,11 @@ open browser with http://localhost:3000
 npm install
 npm run dev
 ```
+
+### How to deploy on vercel
+1. Click the Deploy Button.
+2. Set environment variables follow [doc/env-vars.md](doc/env-vars.md).
+3. Pay attention to the NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH value must be /tmp.
 
 ## Feature
 
