@@ -5,6 +5,7 @@ COPY package*.json ./
 
 # ---- Dependencies ----
 FROM base AS dependencies
+RUN apk add --no-cache python3 make g++
 RUN npm ci
 
 # ---- Build ----
