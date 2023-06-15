@@ -160,7 +160,7 @@ export const Chat: FC<Props> = memo(
                               <a className="text-xs text-gray-500 dark:text-gray-400 underline" href="https://github.com/guangzhengli/ChatFiles/blob/dev/doc/Example.md"> Good Examples .</a>
                             </p>
                             <p className="mt-2 px-8 text-xs text-gray-500 dark:text-gray-400">If you need to upload larger files, please deploy your own chatfiles by:
-                              <a className="text-xs text-gray-500 dark:text-gray-400 underline" href="https://github.com/guangzhengli/ChatFiles"> Chatfiles .</a>
+                              <a className="text-xs text-gray-500 dark:text-gray-400 underline" href="https://github.com/guangzhengli/ChatFiles"> ChatFiles</a>
                             </p>
                           </>
                       }
