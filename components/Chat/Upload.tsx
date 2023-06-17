@@ -11,19 +11,24 @@ interface Props {
     handleIsUploading: (isUploading: boolean) => void;
     handleIsUploadSuccess: (isUploadSuccess: boolean) => void;
     handleUploadError: (error: string) => void;
+    handleKeyConfigurationValidation: () => boolean;
 }
 
 export const Upload = ({
-    onIndexChange, 
+    onIndexChange,
     keyConfiguration,
-    handleIsUploading, 
-    handleIsUploadSuccess, 
-    handleUploadError
+    handleIsUploading,
+    handleIsUploadSuccess,
+    handleUploadError,
+    handleKeyConfigurationValidation,
 }: Props) => {
 
     const { t } = useTranslation('sidebar');
 
     const handleFile = async (file: File) => {
+        if (!handleKeyConfigurationValidation()) {
+            return;
+        }
         if (!validateFile(file)) {
             handleIsUploadSuccess(false);
             return;

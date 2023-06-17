@@ -32,6 +32,7 @@ import {useTranslation} from 'next-i18next';
 import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import {useEffect, useRef, useState} from 'react';
+import {KeySettingsAlertDialog} from "@/components/Sidebar/KeySettingsAlert";
 
 interface HomeProps {
     serverSideApiKeyIsSet: boolean;
@@ -51,6 +52,7 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
     const [messageError, setMessageError] = useState<boolean>(false);
     const [modelError, setModelError] = useState<ErrorMessage | null>(null);
     const [currentMessage, setCurrentMessage] = useState<Message>();
+    const [showKeyConfigurationAlert, setShowKeyConfigurationAlert] = useState(false);
     const [keyConfiguration, setkeyConfiguration] = useState<KeyConfiguration>({
         apiType: ModelType.OPENAI,
         apiKey: '',
@@ -63,13 +65,33 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
     const stopConversationRef = useRef<boolean>(false);
 
     const keyConfigurationButtonRef = useRef<HTMLButtonElement>(null);
-    const handlekeyConfigurationButtonClick = () => {
+    const handleKeyConfigurationButtonClick = () => {
         if (keyConfigurationButtonRef.current) {
             keyConfigurationButtonRef.current.click();
         }
     };
 
+    const handleShowKeyConfigurationAlertCancel = () => {
+        setShowKeyConfigurationAlert(false);
+      };
+    
+      const handleShowKeyConfigurationAlertContinue = () => {
+        setShowKeyConfigurationAlert(false);
+        handleKeyConfigurationButtonClick();
+      };
+
+    const handleKeyConfigurationValidation = (): boolean => {
+        if (!serverSideApiKeyIsSet && !keyConfiguration.apiKey && !keyConfiguration.azureApiKey) {
+            setShowKeyConfigurationAlert(true);
+            return false;
+        }
+        return true;
+    }
+
     const handleSend = async (message: Message, deleteCount = 0) => {
+        if (!handleKeyConfigurationValidation()) {
+            return;
+        }
         if (selectedConversation) {
             let updatedConversation: Conversation;
 
@@ -515,12 +537,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
         }
     }, [serverSideApiKeyIsSet]);
 
-    useEffect(() => {
-        if (!serverSideApiKeyIsSet && !keyConfiguration.apiKey && !keyConfiguration.azureApiKey) {
-            handlekeyConfigurationButtonClick();
-        }
-    });
-
     return (
         <>
             <Head>
@@ -530,6 +546,9 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                       content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"/>
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
+            {showKeyConfigurationAlert && (
+                <KeySettingsAlertDialog onCancellation={handleShowKeyConfigurationAlertCancel} onContinue={handleShowKeyConfigurationAlertContinue} />
+            )}
             {selectedConversation && (
                 <main
                     className={`flex h-screen w-screen flex-col text-sm text-white dark:text-white ${lightMode}`}
@@ -591,6 +610,7 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                             onUpdateConversation={handleUpdateConversation}
                             onEditMessage={handleEditMessage}
                             stopConversationRef={stopConversationRef}
+                            handleKeyConfigurationValidation={handleKeyConfigurationValidation}
                         />
                     </div>
                 </main>
