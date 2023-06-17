@@ -1,8 +1,7 @@
 # Environment Variable
 
-# Public Variable
+if you have any confusion about the environment variable, please create an issue or contact me.
 
-<!-- help me wirte md table -->
 | Name | Description | Default Value | Vercel |
 | ---- | ----------- | ------------- | ------ |
 | NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH | The path to store uploaded files. | public/uploads | /tmp |

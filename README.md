@@ -54,11 +54,11 @@ npm run dev
 
 [![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/iguangzhengli)
 
-More Sponsors methods:
+More Sponsor methods:
 
 https://guangzhengli.com/sponsors
 
-### Who sponsors this project?
+### Who is sponsoring this project?
 
 <p>
 <!-- real-sponsors -->
