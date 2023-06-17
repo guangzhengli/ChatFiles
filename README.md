@@ -52,3 +52,19 @@ npm run dev
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=guangzhengli/ChatFiles&type=Date)](https://star-history.com/#guangzhengli/ChatFiles&Date)
+
+## Sponsors
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/iguangzhengli)
+
+### Who sponsors me
+
+<p>
+<!-- real-sponsors -->
+<a href="https://github.com/johnliu33"><img src="https://github.com/johnliu33.png" width="50px" alt="johnliu33" /></a>&nbsp;&nbsp;
+<a href="https://github.com/noxonsu"><img src="https://github.com/noxonsu.png" width="50px" alt="noxonsu" /></a>&nbsp;&nbsp;
+<a href="https://github.com/magedhelmy1"><img src="https://github.com/magedhelmy1.png" width="50px" alt="magedhelmy1" /></a>&nbsp;&nbsp;
+<!-- real-sponsors -->
+</p>
+
+
