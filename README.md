@@ -47,3 +47,8 @@ npm run dev
 
 - [x] Chat with GPT-3.5
 - [x] Chat with file by langchainjs and supabase vector db.
+
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=guangzhengli/ChatFiles&type=Date)](https://star-history.com/#guangzhengli/ChatFiles&Date)
