@@ -72,14 +72,7 @@
  - 'What is the difference between rent-controlled and rent-stabilized apartments?',
  - "What was the author's experience with launching an online store builder?",
  - "What is the author's opinion on customs in rapidly changing fields?",
- - "What was the author's experience with leaving Y Combinator?
-
-## The gift of the magi
-1. download file [The gift of the magi](./example/the_gift_of_the_magi.txt).
-2. upload.
-3. Some good starting questions like:
-   1. What did the author say?
-   2. What did Jim do?
+ - "What was the author's experience with leaving Y Combinator?"
 
 ## Other languages
 
