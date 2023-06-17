@@ -8,9 +8,6 @@
 <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fguangzhengli%2FChatFiles&env=NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH,SUPABASE_SERVICE_ROLE_KEY,SUPABASE_URL&envDescription=Have%20a%20conversation%20with%20files&envLink=https%3A%2F%2Fgithub.com%2Fguangzhengli%2FChatFiles%2Fblob%2Fmain%2Fdoc%2Fenv-vars.md&demo-title=ChatFiles&demo-description=Have%20a%20conversation%20with%20files&demo-url=https%3A%2F%2Fchat-file.vercel.app%2F"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
 </p>
 
-
-EN | [中文文档](README.zh.md)
-
 > this repository use [LangchainJS](https://github.com/hwchase17/langchainjs), based on [Chatbot-ui](https://github.com/mckaywrigley/chatbot-ui)
 
 ![ChatFiles](./doc/chatfiles.png)
