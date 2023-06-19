@@ -65,6 +65,8 @@ https://guangzhengli.com/sponsors
 <a href="https://github.com/johnliu33"><img src="https://github.com/johnliu33.png" width="50px" alt="johnliu33" /></a>&nbsp;&nbsp;
 <a href="https://github.com/noxonsu"><img src="https://github.com/noxonsu.png" width="50px" alt="noxonsu" /></a>&nbsp;&nbsp;
 <a href="https://github.com/magedhelmy1"><img src="https://github.com/magedhelmy1.png" width="50px" alt="magedhelmy1" /></a>&nbsp;&nbsp;
+Zhang Andy&nbsp;&nbsp;
+<a href="https://github.com/Huayu-Qin"><img src="https://github.com/Huayu-Qin.png" width="50px" alt="Huayu-Qin" /></a>&nbsp;&nbsp;
 <!-- real-sponsors -->
 </p>
 
