@@ -2,7 +2,7 @@ import {PDFLoader} from "langchain/document_loaders/fs/pdf";
 import {EPubLoader} from "langchain/document_loaders/fs/epub";
 import {DocxLoader} from "langchain/document_loaders/fs/docx";
 import {TextLoader} from "langchain/document_loaders/fs/text";
-import { CSVLoader } from "langchain/document_loaders/fs/csv";
+import {CSVLoader} from "langchain/document_loaders/fs/csv";
 import {DirectoryLoader} from "langchain/document_loaders/fs/directory";
 import {DocumentLoader} from "langchain/dist/document_loaders/base";
 import {UnstructuredLoader} from "langchain/document_loaders/fs/unstructured";
@@ -57,19 +57,4 @@ export function getDirectoryLoader(path: string): DocumentLoader {
             ".csv": (path) => getDocumentLoader("csv", path),
         }
     );
-}
-
-export function validateFileType(fileType: string): boolean {
-    switch (fileType) {
-        case "pdf":
-        case "epub":
-        case "docx":
-        case "txt":
-        case "md":
-        case "csv":
-        case "json":
-            return true;
-        default:
-            return false;
-    }
 }

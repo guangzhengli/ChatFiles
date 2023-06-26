@@ -3,7 +3,6 @@ import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
 import {humanFileSize} from "@/utils/app/files";
 import {useTranslation} from 'next-i18next';
 import {v4 as uuidv4} from 'uuid';
-import {EmbeddingCreateRequest} from "@/types/embedding";
 
 interface Props {
     onIndexChange: (index: LlamaIndex) => void;
@@ -50,14 +49,38 @@ export const Upload = ({
     };
 
     const validateFile = (file: File) => {
-        console.log(`select a file size: ${humanFileSize(file.size)}`);
+        console.log(`upload file size: ${humanFileSize(file.size)}`);
         console.log(`file max size: ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
         if (CHAT_FILES_MAX_SIZE != 0 && file.size > CHAT_FILES_MAX_SIZE) {
             handleUploadError(`Please select a file smaller than ${humanFileSize(CHAT_FILES_MAX_SIZE)}`);
             return false;
         }
+
+        console.log(`upload file type: ${file.name.split('.').pop()!}`);
+        if (!validateFileType(file.name.split('.').pop()!)) {
+            handleUploadError(`Please upload file of these types: ${supportFileType}`);
+            return false;
+        }
+
         return true;
     };
+
+    const supportFileType = "pdf, epub, docx, txt, md, csv, json";
+
+    function validateFileType(fileType: string): boolean {
+        switch (fileType) {
+            case "pdf":
+            case "epub":
+            case "docx":
+            case "txt":
+            case "md":
+            case "csv":
+            case "json":
+                return true;
+            default:
+                return false;
+        }
+    }
 
     const uploadFile = async (file: File) => {
         const fileName = uuidv4();
