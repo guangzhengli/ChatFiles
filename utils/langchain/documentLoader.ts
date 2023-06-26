@@ -46,6 +46,7 @@ export function getDirectoryLoader(path: string): DocumentLoader {
             ".epub": (path) => getDocumentLoader("epub", path),
             ".txt": (path) => getDocumentLoader("txt", path),
             ".docx": (path) => getDocumentLoader("docx", path),
+            ".json": (path) => getDocumentLoader("json", path),
         }
     );
 }
