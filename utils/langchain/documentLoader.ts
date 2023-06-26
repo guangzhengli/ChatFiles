@@ -39,6 +39,8 @@ export function getDocumentLoader(fileType: string, filePath: string): DocumentL
         case "csv":
             loader = new CSVLoader(filePath);
             return loader;
+        case "zip":
+            return getDirectoryLoader(filePath)
         default:
             loader = new UnstructuredLoader(filePath);
             return loader;
@@ -46,8 +48,9 @@ export function getDocumentLoader(fileType: string, filePath: string): DocumentL
 }
 
 export function getDirectoryLoader(path: string): DocumentLoader {
+    const zipFilePath = path.split('.')[0];
     return new DirectoryLoader(
-        path, {
+      zipFilePath, {
             ".pdf": (path) => getDocumentLoader("pdf", path),
             ".epub": (path) => getDocumentLoader("epub", path),
             ".txt": (path) => getDocumentLoader("txt", path),
