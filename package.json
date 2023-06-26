@@ -18,6 +18,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@supabase/supabase-js": "^2.21.0",
     "@tabler/icons-react": "^2.9.0",
+    "@types/adm-zip": "^0.5.0",
     "@types/multer": "^1.4.7",
     "class-variance-authority": "^0.6.0",
     "clsx": "^1.2.1",

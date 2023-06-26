@@ -1,6 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import multer from "multer";
 import fs from 'fs';
+import AdmZip from 'adm-zip';
 import {NEXT_PUBLIC_CHAT_FILES_UPLOAD_PATH} from "@/utils/app/const";
 
 export const config = {
@@ -29,6 +30,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         upload.single('file')(req as any, res as any, (err: any) => {
             if (err) {
                 return res.status(400).json({ message: err.message });
+            }
+            const fileName = req.query.fileName as string;
+            if (fileName.split('.').pop()! === 'zip') {
+                try {
+                    const zip = new AdmZip(`${folderPath}/${fileName}`);
+                    const finalPath = `${folderPath}/${fileName.split('.')[0]}`;
+                    zip.extractAllTo(finalPath, true);
+                } catch (e) {
+                    console.error(e);
+                    return res.status(500).json({ message: (e as Error).message });
+                }
             }
             // File uploaded successfully
             res.status(200).json({ message: 'File uploaded successfully' });

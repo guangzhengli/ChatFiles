@@ -65,7 +65,7 @@ export const Upload = ({
         return true;
     };
 
-    const supportFileType = "pdf, epub, docx, txt, md, csv, json";
+    const supportFileType = "pdf, epub, docx, txt, md, csv, json, zip";
 
     function validateFileType(fileType: string): boolean {
         switch (fileType) {
@@ -75,6 +75,7 @@ export const Upload = ({
             case "txt":
             case "md":
             case "csv":
+            case "zip":
             case "json":
                 return true;
             default:
@@ -121,13 +122,14 @@ export const Upload = ({
                 fileName: fileName,
                 fileType: fileType,
             })
-        }).then(res => {
+        }).then(async (res) => {
             if (!res.ok) {
-                console.log("save embedding failed:");
-                throw new Error("save embedding failed`");
+                const message = await res.text();
+                console.log('save embedding failed: ', message);
+                throw new Error(`save embedding failed: ' ${message}`);
             }
-
         });
+
     }
 
     const deleteFile = async (fileTempName: string) => {
