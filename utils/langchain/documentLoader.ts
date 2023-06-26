@@ -2,6 +2,7 @@ import {PDFLoader} from "langchain/document_loaders/fs/pdf";
 import {EPubLoader} from "langchain/document_loaders/fs/epub";
 import {DocxLoader} from "langchain/document_loaders/fs/docx";
 import {TextLoader} from "langchain/document_loaders/fs/text";
+import { CSVLoader } from "langchain/document_loaders/fs/csv";
 import {DirectoryLoader} from "langchain/document_loaders/fs/directory";
 import {DocumentLoader} from "langchain/dist/document_loaders/base";
 import {UnstructuredLoader} from "langchain/document_loaders/fs/unstructured";
@@ -35,6 +36,9 @@ export function getDocumentLoader(fileType: string, filePath: string): DocumentL
             // JSONLoader is not implemented with split option
             loader = new TextLoader(filePath);
             return loader;
+        case "csv":
+            loader = new CSVLoader(filePath);
+            return loader;
         default:
             loader = new UnstructuredLoader(filePath);
             return loader;
@@ -50,6 +54,7 @@ export function getDirectoryLoader(path: string): DocumentLoader {
             ".docx": (path) => getDocumentLoader("docx", path),
             ".json": (path) => getDocumentLoader("json", path),
             ".md": (path) => getDocumentLoader("md", path),
+            ".csv": (path) => getDocumentLoader("csv", path),
         }
     );
 }
@@ -61,6 +66,7 @@ export function validateFileType(fileType: string): boolean {
         case "docx":
         case "txt":
         case "md":
+        case "csv":
         case "json":
             return true;
         default:
