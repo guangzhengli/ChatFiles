@@ -2,10 +2,9 @@ import {PDFLoader} from "langchain/document_loaders/fs/pdf";
 import {EPubLoader} from "langchain/document_loaders/fs/epub";
 import {DocxLoader} from "langchain/document_loaders/fs/docx";
 import {TextLoader} from "langchain/document_loaders/fs/text";
-import { JSONLoader } from "langchain/document_loaders/fs/json";
-import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
+import {DirectoryLoader} from "langchain/document_loaders/fs/directory";
 import {DocumentLoader} from "langchain/dist/document_loaders/base";
-import { UnstructuredLoader } from "langchain/document_loaders/fs/unstructured";
+import {UnstructuredLoader} from "langchain/document_loaders/fs/unstructured";
 
 export function getDocumentLoader(fileType: string, filePath: string): DocumentLoader {
     let loader;
@@ -29,6 +28,9 @@ export function getDocumentLoader(fileType: string, filePath: string): DocumentL
         case "txt":
             loader = new TextLoader(filePath);
             return loader;
+        case "md":
+            loader = new TextLoader(filePath);
+            return loader;
         case "json":
             // JSONLoader is not implemented with split option
             loader = new TextLoader(filePath);
@@ -47,6 +49,21 @@ export function getDirectoryLoader(path: string): DocumentLoader {
             ".txt": (path) => getDocumentLoader("txt", path),
             ".docx": (path) => getDocumentLoader("docx", path),
             ".json": (path) => getDocumentLoader("json", path),
+            ".md": (path) => getDocumentLoader("md", path),
         }
     );
+}
+
+export function validateFileType(fileType: string): boolean {
+    switch (fileType) {
+        case "pdf":
+        case "epub":
+        case "docx":
+        case "txt":
+        case "md":
+        case "json":
+            return true;
+        default:
+            return false;
+    }
 }
