@@ -1,10 +1,19 @@
-import {FC, useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet"
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import {KeyConfiguration, ModelType} from '@/types';
 
 interface Props {
@@ -21,6 +30,7 @@ export const KeySettings: FC<Props> = ({
     const [fromKeyConfiguration, setFromKeyConfiguration] = useState<KeyConfiguration>({
         apiType: keyConfiguration.apiType,
         apiKey: keyConfiguration.apiKey,
+        apiModel: keyConfiguration.apiModel,
         azureApiKey: keyConfiguration.azureApiKey,
         azureInstanceName: keyConfiguration.azureInstanceName,
         azureApiVersion: keyConfiguration.azureApiVersion,
@@ -36,6 +46,13 @@ export const KeySettings: FC<Props> = ({
     const handleAzureOpenAISubmit = () => {
         fromKeyConfiguration.apiType = ModelType.AZURE_OPENAI;
         onKeyConfigurationChange(fromKeyConfiguration);
+    };
+
+    const handleApiModelSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setFromKeyConfiguration({
+            ...fromKeyConfiguration,
+            apiModel: event.target.value,
+        });
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +86,23 @@ export const KeySettings: FC<Props> = ({
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-2">
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                 <Label htmlFor="name">Key</Label>
                                 <Input id="openaieky" type="password" placeholder="sk-xxx" name="apiKey" value={fromKeyConfiguration.apiKey} onChange={handleChange}/>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Model</Label>
+                                    <Select>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="gpt-3.5-turbo" defaultValue={fromKeyConfiguration.apiModel} onSelect={handleApiModelSelect} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
+                                            <SelectItem value="gpt-4">gpt-4</SelectItem>
+                                            <SelectItem value="gpt-3.5-turbo-0613">gpt-3.5-turbo-0613</SelectItem>
+                                            <SelectItem value="gpt-3.5-turbo-16k">gpt-3.5-turbo-16k</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </CardContent>
                             <CardFooter>
