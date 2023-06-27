@@ -1,29 +1,10 @@
 import {Chat} from '@/components/Chat/Chat';
 import {Navbar} from '@/components/Mobile/Navbar';
 import {Sidebar} from '@/components/Sidebar/Sidebar';
-import {
-    ChatBody,
-    ChatFolder,
-    Conversation,
-    ErrorMessage,
-    KeyConfiguration,
-    KeyValuePair,
-    Message,
-    ModelType,
-    OpenAIModel,
-    OpenAIModelID,
-    OpenAIModels,
-} from '@/types';
-import {
-    cleanConversationHistory,
-    cleanSelectedConversation,
-} from '@/utils/app/clean';
+import {ChatFolder, Conversation, ErrorMessage, KeyConfiguration, KeyValuePair, Message, ModelType,} from '@/types';
+import {cleanConversationHistory, cleanSelectedConversation,} from '@/utils/app/clean';
 import {DEFAULT_SYSTEM_PROMPT} from '@/utils/app/const';
-import {
-    saveConversation,
-    saveConversations,
-    updateConversation,
-} from '@/utils/app/conversation';
+import {saveConversation, saveConversations, updateConversation,} from '@/utils/app/conversation';
 import {saveFolders} from '@/utils/app/folders';
 import {exportData, importData} from '@/utils/app/importExport';
 import {IconArrowBarRight} from '@tabler/icons-react';
@@ -45,7 +26,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
     const [selectedConversation, setSelectedConversation] =
         useState<Conversation>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [models, setModels] = useState<OpenAIModel[]>([]);
     const [lightMode, setLightMode] = useState<'dark' | 'light'>('dark');
     const [messageIsStreaming, setMessageIsStreaming] = useState<boolean>(false);
     const [showSidebar, setShowSidebar] = useState<boolean>(true);
@@ -354,7 +334,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                 lastConversation ? lastConversation.id + 1 : 1
             }`,
             messages: [],
-            model: OpenAIModels[OpenAIModelID.GPT_3_5],
             prompt: DEFAULT_SYSTEM_PROMPT,
             folderId: 0,
             index: {
@@ -391,7 +370,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                 id: 1,
                 name: 'New conversation',
                 messages: [],
-                model: OpenAIModels[OpenAIModelID.GPT_3_5],
                 prompt: DEFAULT_SYSTEM_PROMPT,
                 folderId: 0,
                 index: {
@@ -429,7 +407,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
             id: 1,
             name: 'New conversation',
             messages: [],
-            model: OpenAIModels[OpenAIModelID.GPT_3_5],
             prompt: DEFAULT_SYSTEM_PROMPT,
             folderId: 0,
             index: {
@@ -526,7 +503,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                 id: 1,
                 name: 'New conversation',
                 messages: [],
-                model: OpenAIModels[OpenAIModelID.GPT_3_5],
                 prompt: DEFAULT_SYSTEM_PROMPT,
                 folderId: 0,
                 index: {
@@ -604,7 +580,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                             keyConfiguration={keyConfiguration}
                             modelError={modelError}
                             messageError={messageError}
-                            models={models}
                             loading={loading}
                             onSend={handleSend}
                             onUpdateConversation={handleUpdateConversation}

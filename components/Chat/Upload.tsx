@@ -129,7 +129,6 @@ export const Upload = ({
                 throw new Error(`save embedding failed: ' ${message}`);
             }
         });
-
     }
 
     const deleteFile = async (fileTempName: string) => {

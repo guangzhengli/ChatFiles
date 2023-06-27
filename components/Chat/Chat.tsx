@@ -1,20 +1,18 @@
-import {Conversation, ErrorMessage, KeyConfiguration, KeyValuePair, Message, OpenAIModel,} from '@/types';
+import {Conversation, ErrorMessage, KeyConfiguration, KeyValuePair, Message,} from '@/types';
 import {throttle} from '@/utils';
-import {IconClearAll, IconSettings} from '@tabler/icons-react';
+import {IconClearAll} from '@tabler/icons-react';
 import {useTranslation} from 'next-i18next';
 import {FC, memo, MutableRefObject, useEffect, useRef, useState} from 'react';
 import {ChatInput} from './ChatInput';
 import {ChatLoader} from './ChatLoader';
 import {ChatMessage} from './ChatMessage';
 import {ErrorMessageDiv} from './ErrorMessageDiv';
-import {ModelSelect} from './ModelSelect';
 import {Upload} from "@/components/Chat/Upload";
 import {CHAT_FILES_MAX_SIZE} from "@/utils/app/const";
 import {humanFileSize} from "@/utils/app/files";
 
 interface Props {
     conversation: Conversation;
-    models: OpenAIModel[];
     keyConfiguration: KeyConfiguration;
     messageIsStreaming: boolean;
     modelError: ErrorMessage | null;
@@ -33,7 +31,6 @@ interface Props {
 export const Chat: FC<Props> = memo(
     ({
          conversation,
-         models,
          keyConfiguration,
          messageIsStreaming,
          modelError,
@@ -221,24 +218,6 @@ export const Chat: FC<Props> = memo(
                                             size={18}
                                         />
                                     </div>
-                                    {showSettings && (
-                                        <div className="mx-auto flex w-[200px] flex-col space-y-10 pt-8 sm:w-[300px]">
-                                            <div
-                                                className="flex h-full flex-col space-y-4 rounded border border-neutral-500 p-2">
-                                                <ModelSelect
-                                                    model={conversation.model}
-                                                    models={models}
-                                                    onModelChange={(model) =>
-                                                        onUpdateConversation(conversation, {
-                                                            key: 'model',
-                                                            value: model,
-                                                        })
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
                                     {conversation.messages.map((message, index) => (
                                         <ChatMessage
                                             key={index}
@@ -263,7 +242,6 @@ export const Chat: FC<Props> = memo(
                             textareaRef={textareaRef}
                             messageIsStreaming={messageIsStreaming}
                             conversationIsEmpty={conversation.messages.length > 0}
-                            model={conversation.model}
                             onSend={(message) => {
                                 setCurrentMessage(message);
                                 onSend(message);
