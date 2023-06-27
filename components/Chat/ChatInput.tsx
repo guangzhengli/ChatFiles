@@ -1,4 +1,4 @@
-import {Message, OpenAIModel, OpenAIModelID} from '@/types';
+import {Message} from '@/types';
 import {IconPlayerStop, IconRepeat, IconSend} from '@tabler/icons-react';
 import {
   FC,
@@ -11,7 +11,6 @@ import {useTranslation} from 'next-i18next';
 
 interface Props {
   messageIsStreaming: boolean;
-  model: OpenAIModel;
   conversationIsEmpty: boolean;
   onSend: (message: Message) => void;
   onRegenerate: () => void;
@@ -22,7 +21,6 @@ interface Props {
 
 export const ChatInput: FC<Props> = ({
                                        messageIsStreaming,
-                                       model,
                                        conversationIsEmpty,
                                        onSend,
                                        onRegenerate,
@@ -36,7 +34,7 @@ export const ChatInput: FC<Props> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    const maxLength = model.id === OpenAIModelID.GPT_3_5 ? 12000 : 24000;
+    const maxLength = 12000;
 
     if (value.length > maxLength) {
       alert(
