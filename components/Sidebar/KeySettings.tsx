@@ -1,40 +1,24 @@
-import { FC, MouseEventHandler, useState } from 'react';
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
-import { KeyConfiguration, ModelType } from '@/types';
+import {FC, useState} from 'react';
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
+import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger,} from "@/components/ui/sheet"
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card"
+import {KeyConfiguration, ModelType} from '@/types';
 
 interface Props {
     keyConfiguration: KeyConfiguration;
-    onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+    onKeyConfigurationChange: (keySettings: KeyConfiguration) => void;
     keyConfigurationButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 export const KeySettings: FC<Props> = ({
     keyConfiguration,
-    onKeyConfigrationChange,
+    onKeyConfigurationChange,
     keyConfigurationButtonRef,
 }) => {
-    const [fromkeyConfigration, setFromKeyConfigration] = useState<KeyConfiguration>({
+    const [fromKeyConfiguration, setFromKeyConfiguration] = useState<KeyConfiguration>({
         apiType: keyConfiguration.apiType,
         apiKey: keyConfiguration.apiKey,
         azureApiKey: keyConfiguration.azureApiKey,
@@ -45,18 +29,18 @@ export const KeySettings: FC<Props> = ({
     })
 
     const handleOpenAISubmit = () => {
-        fromkeyConfigration.apiType = ModelType.OPENAI;
-        onKeyConfigrationChange(fromkeyConfigration);
+        fromKeyConfiguration.apiType = ModelType.OPENAI;
+        onKeyConfigurationChange(fromKeyConfiguration);
     };
 
     const handleAzureOpenAISubmit = () => {
-        fromkeyConfigration.apiType = ModelType.AZURE_OPENAI;
-        onKeyConfigrationChange(fromkeyConfigration);
+        fromKeyConfiguration.apiType = ModelType.AZURE_OPENAI;
+        onKeyConfigurationChange(fromKeyConfiguration);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFromKeyConfigration({
-          ...fromkeyConfigration,
+        setFromKeyConfiguration({
+          ...fromKeyConfiguration,
           [event.target.name]: event.target.value,
         });
     };
@@ -87,7 +71,7 @@ export const KeySettings: FC<Props> = ({
                             <CardContent className="space-y-2">
                                 <div className="space-y-1">
                                 <Label htmlFor="name">Key</Label>
-                                <Input id="openaieky" type="password" placeholder="sk-xxx" name="apiKey" value={fromkeyConfigration.apiKey} onChange={handleChange}/>
+                                <Input id="openaieky" type="password" placeholder="sk-xxx" name="apiKey" value={fromKeyConfiguration.apiKey} onChange={handleChange}/>
                                 </div>
                             </CardContent>
                             <CardFooter>
@@ -108,23 +92,23 @@ export const KeySettings: FC<Props> = ({
                             <CardContent className="space-y-2">
                                 <div className="space-y-1">
                                 <Label htmlFor="current">API Key</Label>
-                                <Input id="current" type="password" placeholder='***' name="azureApiKey" value={fromkeyConfigration.azureApiKey} onChange={handleChange}/>
+                                <Input id="current" type="password" placeholder='***' name="azureApiKey" value={fromKeyConfiguration.azureApiKey} onChange={handleChange}/>
                                 </div>
                                 <div className="space-y-1">
                                 <Label htmlFor="name">Instance Name</Label>
-                                <Input id="name" placeholder="name" name="azureInstanceName" value={fromkeyConfigration.azureInstanceName} onChange={handleChange}/>
+                                <Input id="name" placeholder="name" name="azureInstanceName" value={fromKeyConfiguration.azureInstanceName} onChange={handleChange}/>
                                 </div>
                                 <div className="space-y-1">
                                 <Label htmlFor="name">API Version</Label>
-                                <Input id="name" placeholder="2023-05-15" name="azureApiVersion" value={fromkeyConfigration.azureApiVersion} onChange={handleChange}/>
+                                <Input id="name" placeholder="2023-05-15" name="azureApiVersion" value={fromKeyConfiguration.azureApiVersion} onChange={handleChange}/>
                                 </div>
                                 <div className="space-y-1">
                                 <Label htmlFor="name">Deployment Model Name</Label>
-                                <Input id="name" placeholder="gpt-35-turbo" name="azureDeploymentName" value={fromkeyConfigration.azureDeploymentName} onChange={handleChange}/>
+                                <Input id="name" placeholder="gpt-35-turbo" name="azureDeploymentName" value={fromKeyConfiguration.azureDeploymentName} onChange={handleChange}/>
                                 </div>
                                 <div className="space-y-1">
                                 <Label htmlFor="name">Embeddings Deployment Model Name</Label>
-                                <Input id="name" placeholder="text-embedding-ada-002" name="azureEmbeddingDeploymentName" value={fromkeyConfigration.azureEmbeddingDeploymentName} onChange={handleChange}/>
+                                <Input id="name" placeholder="text-embedding-ada-002" name="azureEmbeddingDeploymentName" value={fromKeyConfiguration.azureEmbeddingDeploymentName} onChange={handleChange}/>
                                 </div>
                             </CardContent>
                             <CardFooter>
