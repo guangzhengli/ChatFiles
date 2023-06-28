@@ -1,6 +1,15 @@
 import { KeyConfiguration, ModelType } from "@/types";
 import { NextApiRequest } from "next";
-import { AZURE_OPENAI_API_DEPLOYMENT_NAME, AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME, AZURE_OPENAI_API_INSTANCE_NAME, AZURE_OPENAI_API_KEY, AZURE_OPENAI_API_VERSION, OPENAI_API_KEY, OPENAI_TYPE } from "./const";
+import {
+    AZURE_OPENAI_API_DEPLOYMENT_NAME,
+    AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME,
+    AZURE_OPENAI_API_INSTANCE_NAME,
+    AZURE_OPENAI_API_KEY,
+    AZURE_OPENAI_API_VERSION,
+    OPENAI_API_KEY,
+    OPENAI_API_MODEL,
+    OPENAI_TYPE
+} from "./const";
 
 export const getKeyConfiguration = (req: NextApiRequest): KeyConfiguration => {
     const apiType = OPENAI_TYPE;
@@ -35,6 +44,7 @@ const getKeyConfigurationFromReqHeaders = (req: NextApiRequest): KeyConfiguratio
 const getKeyConfigurationFromEnvironment = (): KeyConfiguration => {
     const apiType = OPENAI_TYPE as ModelType;
     const apiKey = OPENAI_API_KEY;
+    const apiModel = OPENAI_API_MODEL;
     const azureApiKey = AZURE_OPENAI_API_KEY;
     const azureInstanceName = AZURE_OPENAI_API_INSTANCE_NAME;
     const azureApiVersion = AZURE_OPENAI_API_VERSION;
@@ -44,6 +54,7 @@ const getKeyConfigurationFromEnvironment = (): KeyConfiguration => {
     const keyConfiguration = {
         apiType,
         apiKey,
+        apiModel,
         azureApiKey,
         azureInstanceName, 
         azureApiVersion, 
