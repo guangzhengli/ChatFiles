@@ -17,7 +17,7 @@ interface Props {
     folders: ChatFolder[];
   }) => void;
   keyConfiguration: KeyConfiguration;
-  onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+  onKeyConfigurationChange: (keySettings: KeyConfiguration) => void;
   keyConfigurationButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
@@ -28,7 +28,7 @@ export const SidebarSettings: FC<Props> = ({
   onExportConversations,
   onImportConversations,
   keyConfiguration,
-  onKeyConfigrationChange,
+  onKeyConfigurationChange,
   keyConfigurationButtonRef,
 }) => {
   const { t } = useTranslation('sidebar');
@@ -54,7 +54,7 @@ export const SidebarSettings: FC<Props> = ({
           onToggleLightMode(lightMode === 'light' ? 'dark' : 'light')
         }
       />
-      <KeySettings keyConfiguration={keyConfiguration} onKeyConfigurationChange={onKeyConfigrationChange} keyConfigurationButtonRef={keyConfigurationButtonRef}/>
+      <KeySettings keyConfiguration={keyConfiguration} onKeyConfigurationChange={onKeyConfigurationChange} keyConfigurationButtonRef={keyConfigurationButtonRef}/>
     </div>
   );
 };

@@ -48,11 +48,14 @@ export const KeySettings: FC<Props> = ({
         onKeyConfigurationChange(fromKeyConfiguration);
     };
 
-    const handleApiModelSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleApiModelSelect = (value: string) => {
+        console.log("api model:", value);
         setFromKeyConfiguration({
             ...fromKeyConfiguration,
-            apiModel: event.target.value,
+            apiModel: value,
         });
+        // fromKeyConfiguration.apiModel = event.target.value;
+        // onKeyConfigurationChange(fromKeyConfiguration);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,9 +95,9 @@ export const KeySettings: FC<Props> = ({
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Model</Label>
-                                    <Select>
+                                    <Select value={fromKeyConfiguration.apiModel} onValueChange={handleApiModelSelect}>
                                         <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="gpt-3.5-turbo" defaultValue={fromKeyConfiguration.apiModel} onSelect={handleApiModelSelect} />
+                                            <SelectValue placeholder="gpt-3.5-turbo" defaultValue={fromKeyConfiguration.apiModel} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="gpt-3.5-turbo">gpt-3.5-turbo</SelectItem>
