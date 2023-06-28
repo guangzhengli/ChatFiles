@@ -178,7 +178,7 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
             let text = '';
 
             while (!done) {
-                if (stopConversationRef.current === true) {
+                if (stopConversationRef.current) {
                     controller.abort();
                     done = true;
                     break;
