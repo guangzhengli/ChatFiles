@@ -15,6 +15,7 @@ export const SUPABASE_URL = process.env.SUPABASE_URL
 export const OPENAI_TYPE = process.env.OPENAI_TYPE; // Or OPENAI || AZURE_OPENAI
 
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+export const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL;
 
 export const AZURE_OPENAI_API_KEY = process.env.AZURE_OPENAI_API_KEY;
 
