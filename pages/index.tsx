@@ -33,9 +33,10 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
     const [modelError, setModelError] = useState<ErrorMessage | null>(null);
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [showKeyConfigurationAlert, setShowKeyConfigurationAlert] = useState(false);
-    const [keyConfiguration, setkeyConfiguration] = useState<KeyConfiguration>({
+    const [keyConfiguration, setKeyConfiguration] = useState<KeyConfiguration>({
         apiType: ModelType.OPENAI,
         apiKey: '',
+        apiModel: 'gpt-3.5-turbo',
         azureApiKey: '',
         azureInstanceName: '',
         azureApiVersion: '',
@@ -256,9 +257,9 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
         exportData();
     };
 
-    const handleKeyConfigrationChange = (keySettings: KeyConfiguration) => {
-        setkeyConfiguration(keySettings);
-        localStorage.setItem('keyConfiguation', JSON.stringify(keySettings));
+    const handleKeyConfigurationChange = (keySettings: KeyConfiguration) => {
+        setKeyConfiguration(keySettings);
+        localStorage.setItem('keyConfiguration', JSON.stringify(keySettings));
     };
 
     const handleImportConversations = (data: {
@@ -466,9 +467,9 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
             setLightMode(theme as 'dark' | 'light');
         }
 
-        const keyConfiguation = localStorage.getItem('keyConfiguation');
-        if (keyConfiguation) {
-            setkeyConfiguration(JSON.parse(keyConfiguation));
+        const keyConfiguration = localStorage.getItem('keyConfiguration');
+        if (keyConfiguration) {
+            setKeyConfiguration(JSON.parse(keyConfiguration));
         }
 
         if (window.innerWidth < 640) {
@@ -558,7 +559,7 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                                     onExportConversations={handleExportData}
                                     onImportConversations={handleImportConversations}
                                     keyConfiguration={keyConfiguration}
-                                    onKeyConfigrationChange={handleKeyConfigrationChange}
+                                    onKeyConfigurationChange={handleKeyConfigurationChange}
                                     keyConfigurationButtonRef={keyConfigurationButtonRef}
                                 />
 

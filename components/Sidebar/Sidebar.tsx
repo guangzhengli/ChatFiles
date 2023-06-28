@@ -37,7 +37,7 @@ interface Props {
     folders: ChatFolder[];
   }) => void;
   keyConfiguration: KeyConfiguration;
-  onKeyConfigrationChange: (keySettings: KeyConfiguration) => void;
+  onKeyConfigurationChange: (keySettings: KeyConfiguration) => void;
   keyConfigurationButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
@@ -60,7 +60,7 @@ export const Sidebar: FC<Props> = ({
   onExportConversations,
   onImportConversations,
   keyConfiguration,
-  onKeyConfigrationChange,
+  onKeyConfigurationChange,
   keyConfigurationButtonRef,
 }) => {
   const { t } = useTranslation('sidebar');
@@ -208,7 +208,7 @@ export const Sidebar: FC<Props> = ({
         onExportConversations={onExportConversations}
         onImportConversations={onImportConversations}
         keyConfiguration={keyConfiguration}
-        onKeyConfigrationChange={onKeyConfigrationChange}
+        onKeyConfigurationChange={onKeyConfigurationChange}
         keyConfigurationButtonRef={keyConfigurationButtonRef}
       />
     </aside>
