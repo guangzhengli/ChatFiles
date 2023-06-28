@@ -40,7 +40,6 @@ export const Chat: FC<Props> = memo(
     const {t} = useTranslation('chat');
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
-    const [showSettings, setShowSettings] = useState<boolean>(false);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string>();
     const [isUploadSuccess, setIsUploadSuccess] = useState(true);
