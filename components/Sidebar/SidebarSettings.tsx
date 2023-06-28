@@ -1,11 +1,11 @@
-import { ChatFolder, Conversation, KeyConfiguration, ModelType } from '@/types';
-import { IconFileExport, IconMoon, IconSun } from '@tabler/icons-react';
-import { FC, useState } from 'react';
-import { useTranslation } from 'next-i18next';
-import { ClearConversations } from './ClearConversations';
-import { Import } from './Import';
-import { SidebarButton } from './SidebarButton';
-import { KeySettings } from './KeySettings';
+import {ChatFolder, Conversation, KeyConfiguration} from '@/types';
+import {IconFileExport, IconMoon, IconSun} from '@tabler/icons-react';
+import {FC} from 'react';
+import {useTranslation} from 'next-i18next';
+import {ClearConversations} from './ClearConversations';
+import {Import} from './Import';
+import {SidebarButton} from './SidebarButton';
+import {KeySettings} from './KeySettings';
 
 interface Props {
   lightMode: 'light' | 'dark';
