@@ -1,7 +1,7 @@
 import {Chat} from '@/components/Chat/Chat';
 import {Navbar} from '@/components/Mobile/Navbar';
 import {Sidebar} from '@/components/Sidebar/Sidebar';
-import {ChatFolder, Conversation, ErrorMessage, KeyConfiguration, KeyValuePair, Message, ModelType,} from '@/types';
+import {ChatFolder, Conversation, KeyConfiguration, KeyValuePair, Message, ModelType,} from '@/types';
 import {cleanConversationHistory, cleanSelectedConversation,} from '@/utils/app/clean';
 import {DEFAULT_SYSTEM_PROMPT} from '@/utils/app/const';
 import {saveConversation, saveConversations, updateConversation,} from '@/utils/app/conversation';
@@ -30,7 +30,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
     const [messageIsStreaming, setMessageIsStreaming] = useState<boolean>(false);
     const [showSidebar, setShowSidebar] = useState<boolean>(true);
     const [messageError, setMessageError] = useState<boolean>(false);
-    const [modelError, setModelError] = useState<ErrorMessage | null>(null);
     const [currentMessage, setCurrentMessage] = useState<Message>();
     const [showKeyConfigurationAlert, setShowKeyConfigurationAlert] = useState(false);
     const [keyConfiguration, setKeyConfiguration] = useState<KeyConfiguration>({
@@ -581,8 +580,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                             conversation={selectedConversation}
                             messageIsStreaming={messageIsStreaming}
                             keyConfiguration={keyConfiguration}
-                            modelError={modelError}
-                            messageError={messageError}
                             loading={loading}
                             onSend={handleSend}
                             onUpdateConversation={handleUpdateConversation}
