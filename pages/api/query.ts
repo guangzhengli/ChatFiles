@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         // res.status(200).json({ responseMessage: chainValues.text.toString() });
     } catch (e) {
         console.log("error in handler: ", e);
-        res.status(500).json({ responseMessage: (e as Error).toString() });
+        res.status(500).json({ errorMessage: (e as Error).toString() });
     }
 
 }

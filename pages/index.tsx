@@ -147,6 +147,10 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                 setLoading(false);
                 setMessageIsStreaming(false);
                 setMessageError(true);
+
+                const message = await response.text();
+                console.log('chat failed: ', message);
+                alert(`error message: ' ${message}`);
                 return;
             }
 
