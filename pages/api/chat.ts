@@ -51,19 +51,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       memory,
     });
 
-    chain.call({ input }).catch(console.error);
+    await chain.call({ input });
   } catch (err) {
     console.error(err);
-    let error = "Unexpected message";
-    if (err instanceof Error) {
-      error = err.message;
-    }
-    return new Response(JSON.stringify({ error }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    res.status(500).json({ errorMessage: (err as Error).toString() });
   }
 };
 
