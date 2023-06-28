@@ -41,13 +41,10 @@ export const KeySettings: FC<Props> = ({
     };
 
     const handleApiModelSelect = (value: string) => {
-        console.log("api model:", value);
         setFromKeyConfiguration({
             ...fromKeyConfiguration,
             apiModel: value,
         });
-        // fromKeyConfiguration.apiModel = event.target.value;
-        // onKeyConfigurationChange(fromKeyConfiguration);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

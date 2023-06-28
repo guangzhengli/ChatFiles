@@ -123,8 +123,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                         prompt: updatedConversation.prompt,
                     }),
                 });
-
-                console.log("handle chat response")
             } else {
                 response = await fetch(
                     `/api/query?message=${message.content}&indexName=${updatedConversation.index.indexName}`, {
@@ -140,7 +138,6 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                             'x-azure-embedding-deployment-name': keyConfiguration.azureEmbeddingDeploymentName ?? '',
                         },
                     });
-                console.log("handle file chat response")
             }
 
             if (!response.ok) {
@@ -245,6 +242,7 @@ const Home: React.FC<HomeProps> = ({serverSideApiKeyIsSet}) => {
                 updatedConversations.push(updatedConversation);
             }
 
+            console.log(`handle chat question: ${message}, response: ${text}`);
             setConversations(updatedConversations);
 
             saveConversations(updatedConversations);
