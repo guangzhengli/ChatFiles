@@ -17,6 +17,7 @@ export const getModel = async (keyConfiguration: KeyConfiguration, res: NextApiR
     } else {
         return new OpenAIChat({
             temperature: 0.9,
+            modelName: keyConfiguration.apiModel,
             streaming: true,
             openAIApiKey: keyConfiguration.apiKey,
             callbacks: getCallbackManager(res),
@@ -38,6 +39,7 @@ export const getChatModel = async (keyConfiguration: KeyConfiguration, res: Next
     } else {
         return new OpenAIChat({
             temperature: 0.9,
+            modelName: keyConfiguration.apiModel,
             streaming: true,
             openAIApiKey: keyConfiguration.apiKey,
             callbacks: getCallbackManager(res),
