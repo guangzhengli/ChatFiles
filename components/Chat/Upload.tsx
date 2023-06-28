@@ -112,6 +112,7 @@ export const Upload = ({
                 'Content-Type': 'application/json',
                 'x-api-type': keyConfiguration.apiType ?? '',
                 'x-api-key': keyConfiguration.apiKey ?? '',
+                'x-api-model': keyConfiguration.apiModel ?? '',
                 'x-azure-api-key': keyConfiguration.azureApiKey ?? '',
                 'x-azure-instance-name': keyConfiguration.azureInstanceName ?? '',
                 'x-azure-api-version': keyConfiguration.azureApiVersion ?? '',
