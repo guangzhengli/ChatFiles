@@ -10,6 +10,12 @@
 
 > this repository use [LangchainJS](https://github.com/hwchase17/langchainjs), based on [Chatbot-ui](https://github.com/mckaywrigley/chatbot-ui)
 
+Technical architecture
+
+![Embedding](./doc/Embedding.png)
+
+Product screenshot.
+
 ![ChatFiles](./doc/chatfiles.png)
 
 **Upload your file and have a conversation with it.**
