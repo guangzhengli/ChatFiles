@@ -2,6 +2,8 @@
 
 # ChatFiles
 
+# Upgrade ChatFiles to [VectorHub](https://github.com/guangzhengli/vectorhub)
+
 ## Deploy with Vercel
 
 <p align="center">
