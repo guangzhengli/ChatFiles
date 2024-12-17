@@ -66,6 +66,8 @@ https://guangzhengli.com/sponsors
 
 ### Who is sponsoring this project?
 
+Sponsored by [The best china travel guide website](https://chinagotrip.com)
+
 <p>
 <!-- real-sponsors -->
 <a href="https://github.com/johnliu33"><img src="https://github.com/johnliu33.png" width="50px" alt="johnliu33" /></a>&nbsp;&nbsp;
